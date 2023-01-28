@@ -5,7 +5,8 @@
         "chrono",
         "deploydev",
         "serde",
-        "threadpool"
+        "threadpool",
+        "WERO"
     ],
     "rest-client.environmentVariables": {
         "$shared": {
@@ -14,7 +15,7 @@
             "protocol": "http",
         },
         "local": {
-            "hostname": "172.18.99.122",
+            "hostname": "172.22.125.174",
         }
     }
 }

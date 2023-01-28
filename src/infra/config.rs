@@ -10,17 +10,20 @@ pub enum Env {
 }
 
 #[derive(Debug, Deserialize, Clone)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub struct Server {
     pub port: u16,
     pub env: Env,
 }
 
 #[derive(Debug, Deserialize, Clone)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub struct Log {
     pub level: String,
 }
 
 #[derive(Debug, Deserialize, Clone)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub struct Db {
     pub connection_string: String,
     pub db_name: String,
@@ -28,6 +31,7 @@ pub struct Db {
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub struct Config {
     pub server: Server,
     pub log: Log,
