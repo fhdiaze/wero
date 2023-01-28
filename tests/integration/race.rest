@@ -1,0 +1,35 @@
+@weroApi = {{protocol}}://{{hostname}}:{{port}}/api
+
+@raceId = 637d9fc563342dd480dd4039
+GET  {{weroApi}}/race.get?id={{raceId}}
+
+###
+
+GET {{weroApi}}/race.find
+
+###
+
+@raceName = Gfny
+@raceCity = Villavicencio
+GET {{weroApi}}/race.find
+    ?name={{raceName}}
+    &city={{raceCity}}
+
+###
+
+POST {{weroApi}}/race.create
+Content-Type: application/json
+
+{
+    "name": "test",
+    "distance": 1.2,
+    "discipline": "Road",
+    "date": "2023-12-16 16:40:36Z",
+    "location": {
+        "address": "Centro",
+        "city": "Sopo",
+        "region": "Cundinamarca",
+        "country": "Colombia"
+    },
+    "image": "empty.png"
+}
