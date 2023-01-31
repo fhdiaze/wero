@@ -36,4 +36,6 @@ jobs:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+          build-args: |
+            DB__CONNECTION_STRING=${{ secrets.DB__CONNECTION_STRING }}
           labels: ${{ steps.meta.outputs.labels }}
