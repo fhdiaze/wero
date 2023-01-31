@@ -36,8 +36,6 @@ pub struct Config {
 
 impl Config {
     pub fn new() -> Result<Self> {
-        tracing::error!("{}", std::env::var("WERO_DB__CONNECTION_STRING").unwrap());
-
         let builder = conf::Config::builder()
             .add_source(conf::File::with_name("./config/default.toml"))
             .add_source(
@@ -47,8 +45,6 @@ impl Config {
             );
 
         let config: Config = builder.build()?.try_deserialize()?;
-
-        tracing::error!("{}", config.db.connection_string);
 
         Ok(config)
     }
