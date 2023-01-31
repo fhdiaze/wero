@@ -5,6 +5,7 @@ on:
   push:
     branches: ["dev"]
 env:
+  REGISTRY: ${{ vars.REGISTRY }}
   IMAGE_NAME: ${{ github.repository }}
 jobs:
   build:
