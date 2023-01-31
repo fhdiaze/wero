@@ -20,8 +20,10 @@ fn route() -> Router<DynDbClient> {
 #[tokio::main]
 async fn main() {
     tracing_subscriber::fmt::init();
+
     let cfg = config::Config::new().expect("Error loading configuration");
     let db = Arc::new(db::client::Client::new(&cfg.db).await.unwrap()) as DynDbClient;
+
     let router = route().layer(ServiceBuilder::new()).with_state(db);
     let addr = SocketAddr::from(([0, 0, 0, 0], 7878));
     axum::Server::bind(&addr)
@@ -29,5 +31,5 @@ async fn main() {
         .await
         .unwrap();
 
-    tracing::debug!("Server is listening on {}", addr);
+    tracing::info!("Server is listening on {}", addr);
 }

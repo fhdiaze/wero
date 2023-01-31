@@ -1,11 +1,11 @@
-[SERVER]
-PORT = "7878"
-ENV = "Dev"
+[server]
+port = "7878"
+env = "Dev"
 
-[LOG]
-LEVEL = "info"
+[log]
+level = "info"
 
-[DB]
-CONNECTION_STRING = "mongodb://localhost:C2y6yDjf5%2FR%2Bob0N8A7Cgv30VRDJIWEHLM%2B4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw%2FJw%3D%3D@localhost:10255/admin?ssl=true"
-DB_NAME = "werodb"
-RACES_COLLECTION = "races"
+[db]
+connection_string = "mongodb://localhost:C2y6yDjf5%2FR%2Bob0N8A7Cgv30VRDJIWEHLM%2B4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw%2FJw%3D%3D@localhost:10255/admin?ssl=true"
+db_name = "werodb"
+races_collection = "races"

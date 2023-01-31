@@ -15,6 +15,10 @@ RUN rm ./target/release/deps/wero*
 RUN cargo build --release
 
 FROM rust
+
+ARG DB__CONNECTION_STRING
+ENV WERO_DB__CONNECTION_STRING=$DB__CONNECTION_STRING
+
 COPY --from=build /wero/target/release/wero .
 COPY ./config ./config
 
