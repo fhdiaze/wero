@@ -1,7 +1,7 @@
 @weroApi = {{protocol}}://{{hostname}}:{{port}}/api
 
 @raceId = 63d56e529cc8aa131d84e33a
-GET  {{weroApi}}/race.get?id={{raceId}}
+GET {{weroApi}}/race.get?id={{raceId}}
 
 ###
 

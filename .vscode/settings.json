@@ -16,6 +16,11 @@
         },
         "local": {
             "hostname": "172.22.125.174",
+        },
+        "dev": {
+            "hostname": "devwero.azurewebsites.net",
+            "protocol": "https",
+            "port": "443"
         }
     }
 }
