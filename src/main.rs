@@ -5,8 +5,9 @@ use infra::{
     config::Config,
     db::{self, traits::DynDbClient},
 };
-use std::{net::SocketAddr, sync::Arc};
+use std::{net::SocketAddr, str::FromStr, sync::Arc};
 use tower::ServiceBuilder;
+use tracing::Level;
 
 mod domain;
 mod infra;
@@ -19,17 +20,22 @@ fn route() -> Router<DynDbClient> {
 
 #[tokio::main]
 async fn main() {
-    tracing_subscriber::fmt::init();
-
     let config = Config::new().expect("Error loading configuration");
+
+    tracing_subscriber::fmt()
+        .with_target(false)
+        .compact()
+        .init();
+
     let db = Arc::new(db::client::Client::new(&config.db).await.unwrap()) as DynDbClient;
 
     let router = route().layer(ServiceBuilder::new()).with_state(db);
     let addr = SocketAddr::from(([0, 0, 0, 0], config.server.port));
+
+    tracing::info!("Server is listening on {}", addr);
+
     axum::Server::bind(&addr)
         .serve(router.into_make_service())
         .await
         .unwrap();
-
-    tracing::info!("Server is listening on {}", addr);
 }

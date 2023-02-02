@@ -41,7 +41,8 @@ impl Config {
             .add_source(
                 conf::Environment::with_prefix("WERO")
                     .prefix_separator("_")
-                    .separator("__"),
+                    .separator("__")
+                    .ignore_empty(true),
             );
 
         let config: Config = builder.build()?.try_deserialize()?;
