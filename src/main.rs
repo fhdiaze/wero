@@ -5,9 +5,8 @@ use infra::{
     config::Config,
     db::{self, traits::DynDbClient},
 };
-use std::{net::SocketAddr, str::FromStr, sync::Arc};
+use std::{net::SocketAddr, sync::Arc};
 use tower::ServiceBuilder;
-use tracing::Level;
 
 mod domain;
 mod infra;
