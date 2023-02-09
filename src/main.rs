@@ -31,7 +31,7 @@ async fn main() {
     let router = route().layer(ServiceBuilder::new()).with_state(db);
     let addr = SocketAddr::from(([0, 0, 0, 0], config.server.port));
 
-    tracing::info!("Server is listening on {}", addr);
+    tracing::info!("Server is listening on address={}", addr);
 
     axum::Server::bind(&addr)
         .serve(router.into_make_service())

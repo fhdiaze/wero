@@ -43,6 +43,12 @@ impl Config {
                     .prefix_separator("_")
                     .separator("__")
                     .ignore_empty(true),
+            )
+            .add_source(
+                conf::Environment::with_prefix("CUSTOMCONNSTR")
+                    .prefix_separator("_")
+                    .separator("__")
+                    .ignore_empty(true),
             );
 
         let config: Config = builder.build()?.try_deserialize()?;
