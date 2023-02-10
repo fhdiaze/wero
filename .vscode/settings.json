@@ -15,7 +15,7 @@
             "protocol": "http",
         },
         "local": {
-            "hostname": "172.22.125.174",
+            "hostname": "localhost",
         },
         "dev": {
             "hostname": "devwero.azurewebsites.net",
