@@ -5,6 +5,6 @@ use std::sync::Arc;
 pub type DynDbClient = Arc<dyn DbClient + Send + Sync>;
 
 pub trait DbClient {
-    fn races(&self) -> &Collection<Race>;
-    fn database(&self) -> &Database;
+  fn races(&self) -> &Collection<Race>;
+  fn database(&self) -> &Database;
 }
