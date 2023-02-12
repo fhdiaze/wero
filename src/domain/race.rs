@@ -1,6 +1,5 @@
+use super::{discipline::Discipline, location::Location, route::Route};
 use serde::{Deserialize, Serialize};
-
-use super::{discipline::Discipline, location::Location};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Race {
@@ -11,7 +10,7 @@ pub struct Race {
   )]
   pub id: Option<String>,
   pub name: String,
-  pub distance: f64,
+  pub route: Route,
   pub discipline: Discipline,
   pub location: Location,
   pub image: String,
@@ -22,7 +21,7 @@ impl Race {
   pub fn new(
     id: Option<String>,
     name: String,
-    distance: f64,
+    route: Route,
     discipline: Discipline,
     location: Location,
     image: String,
@@ -30,7 +29,7 @@ impl Race {
     Race {
       id,
       name,
-      distance,
+      route,
       discipline,
       location,
       image,

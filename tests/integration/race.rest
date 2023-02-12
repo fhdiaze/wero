@@ -1,6 +1,6 @@
 @weroApi = {{protocol}}://{{hostname}}:{{port}}/api
 
-@raceId = 63e5bd05560948581ee44a14
+@raceId = 63e92867d5bbd2fef288ebb5
 GET {{weroApi}}/race.get?id={{raceId}}
 
 ###
@@ -22,7 +22,12 @@ Content-Type: application/json
 
 {
     "name": "test",
-    "distance": 1.2,
+    "route": {
+        "distance": 1.2,
+        "elevation": 1200,
+        "profile": "flat",
+        "description": "Small hills of 100m or 200m"
+    },
     "discipline": "Road",
     "date": "2023-12-16 16:40:36Z",
     "location": {

@@ -82,6 +82,7 @@ impl LocationVm {
 pub struct RaceVm {
   id: String,
   name: String,
+  distance: f64,
   location: LocationVm,
 }
 
@@ -90,6 +91,7 @@ impl RaceVm {
     RaceVm {
       id: race.id.as_ref().unwrap().clone(),
       name: race.name.clone(),
+      distance: race.route.distance,
       location: LocationVm::from(&race.location),
     }
   }
