@@ -1,23 +1,15 @@
-use std::str::FromStr;
-
 use crate::{
-  domain::{location::Location, race::Race},
+  domain::{location::Location, race::Race, route::Route},
   infra::{core::result::Result, db::traits::DynDbClient, error::AppError},
 };
-
 use bson::{doc, oid::ObjectId};
 use serde::{Deserialize, Serialize};
+use std::str::FromStr;
 
 #[derive(Deserialize)]
 pub struct Query {
   /// The id of the race
   id: String,
-}
-
-impl Query {
-  pub fn new(id: String) -> Self {
-    Query { id }
-  }
 }
 
 pub async fn handle(db: DynDbClient, query: Query) -> Result<RaceVm> {
@@ -38,6 +30,7 @@ pub async fn handle(db: DynDbClient, query: Query) -> Result<RaceVm> {
 pub struct RaceVm {
   id: String,
   name: String,
+  route: RouteVm,
   location: LocationVm,
 }
 
@@ -60,11 +53,31 @@ impl LocationVm {
   }
 }
 
+#[derive(Serialize)]
+pub struct RouteVm {
+  pub distance: f64,
+  pub elevation: i32,
+  pub profile: String,
+  pub description: String,
+}
+
+impl RouteVm {
+  fn from(route: &Route) -> Self {
+    RouteVm {
+      distance: route.distance,
+      elevation: route.elevation,
+      profile: route.profile.clone(),
+      description: route.description.clone(),
+    }
+  }
+}
+
 impl RaceVm {
   fn from(race: &Race) -> Self {
     RaceVm {
       id: race.id.clone().unwrap(),
       name: race.name.clone(),
+      route: RouteVm::from(&race.route),
       location: LocationVm::from(&race.location),
     }
   }
