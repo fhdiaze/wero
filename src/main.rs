@@ -1,13 +1,20 @@
 #![deny(nonstandard_style)]
 use crate::modules::race;
-use axum::{http::Method, Router};
+use axum::{
+  error_handling::HandleErrorLayer,
+  http::{Method, StatusCode},
+  Router,
+};
 use infra::{
+  api::handler::handle,
   config::Config,
   db::{self, traits::DynDbClient},
+  error::AppError,
 };
 use std::{net::SocketAddr, sync::Arc};
 use tower::ServiceBuilder;
 use tower_http::{
+  classify::{ServerErrorsAsFailures, SharedClassifier},
   cors::{Any, CorsLayer},
   trace::{DefaultMakeSpan, DefaultOnRequest, DefaultOnResponse, TraceLayer},
 };
@@ -20,6 +27,19 @@ mod modules;
 fn router() -> Router<DynDbClient> {
   let races = race::controller::route();
   Router::new().nest("/api", races)
+}
+
+fn trace_layer() -> TraceLayer<SharedClassifier<ServerErrorsAsFailures>> {
+  TraceLayer::new_for_http()
+    .make_span_with(DefaultMakeSpan::new().include_headers(true))
+    .on_request(DefaultOnRequest::new().level(Level::INFO))
+    .on_response(DefaultOnResponse::new().level(Level::INFO))
+}
+
+fn cors_layer() -> CorsLayer {
+  CorsLayer::new()
+    .allow_methods([Method::GET, Method::POST])
+    .allow_origin(Any)
 }
 
 async fn db_client(config: &Config) -> DynDbClient {
@@ -36,14 +56,9 @@ async fn main() {
     .init();
 
   let db_client = db_client(&config).await;
-  let cors = CorsLayer::new()
-    .allow_methods([Method::GET, Method::POST])
-    .allow_origin(Any);
-  let trace = TraceLayer::new_for_http()
-    .make_span_with(DefaultMakeSpan::new().include_headers(true))
-    .on_request(DefaultOnRequest::new().level(Level::INFO))
-    .on_response(DefaultOnResponse::new().level(Level::INFO));
-  let service_builder = ServiceBuilder::new().layer(trace).layer(cors);
+  let service_builder = ServiceBuilder::new()
+    .layer(trace_layer())
+    .layer(cors_layer());
   let router = router().layer(service_builder).with_state(db_client);
   let addr = SocketAddr::from(([0, 0, 0, 0], config.server.port));
 

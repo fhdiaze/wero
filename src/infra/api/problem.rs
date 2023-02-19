@@ -1,6 +1,11 @@
 use axum::http::StatusCode;
 use serde::Serialize;
 
+use crate::infra::error::AppError;
+
+const DEFAULT_MESSAGE: &str =
+  "An unexpected error occurred while processing the request";
+
 #[derive(Serialize)]
 pub struct Problem {
   pub status: u16,
@@ -33,6 +38,25 @@ impl Problem {
 
   pub fn with_title(kind: Kind, title: String, detail: String) -> Self {
     Self::new(kind.status(), kind.kind(), title, detail)
+  }
+
+  pub fn from_error(error: &AppError) -> Problem {
+    match error {
+      AppError::NotFound(_) => {
+        Problem::from_kind(Kind::NotFound, error.to_string())
+      }
+      AppError::Validation(_) => {
+        Problem::from_kind(Kind::BadRequest, error.to_string())
+      }
+      AppError::Mongo(_) => Problem::from_kind(
+        Kind::InternalServerError,
+        String::from(DEFAULT_MESSAGE),
+      ),
+      AppError::Config(_) => Problem::from_kind(
+        Kind::InternalServerError,
+        String::from(DEFAULT_MESSAGE),
+      ),
+    }
   }
 }
 
