@@ -33,7 +33,9 @@ impl Problem {
   }
 
   pub fn from_kind(kind: Kind, detail: String) -> Self {
-    Self::new(kind.status(), kind.kind(), kind.title(), detail)
+    let title = kind.title();
+
+    Self::with_title(kind, title, detail)
   }
 
   pub fn with_title(kind: Kind, title: String, detail: String) -> Self {
