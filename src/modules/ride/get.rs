@@ -15,12 +15,12 @@ pub struct Query {
 pub async fn handle(db: DynDbClient, query: Query) -> Result<RideVm> {
   let id = ObjectId::from_str(&query.id).unwrap();
   let filter = doc! {"_id": id };
-  let opt_race = db.rides().find_one(Some(filter), None).await?;
+  let opt_ride = db.rides().find_one(Some(filter), None).await?;
 
-  match opt_race {
-    Some(race) => Ok(RideVm::from(&race)),
+  match opt_ride {
+    Some(ride) => Ok(RideVm::from(&ride)),
     None => Err(AppError::NotFound(format!(
-      "No race was found with id={}",
+      "No ride was found with id={}",
       query.id
     ))),
   }

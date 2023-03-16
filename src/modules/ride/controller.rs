@@ -13,18 +13,18 @@ async fn handle_create(
   State(db): State<DynDbClient>,
   Json(cmd): Json<create::Command>,
 ) -> Result<create::RideVm> {
-  let race = create::handle(db, cmd).await?;
+  let ride = create::handle(db, cmd).await?;
 
-  Ok(race)
+  Ok(ride)
 }
 
 async fn handle_get(
   State(db): State<DynDbClient>,
   Query(query): Query<get::Query>,
 ) -> Result<get::RideVm> {
-  let race = get::handle(db, query).await?;
+  let ride = get::handle(db, query).await?;
 
-  Ok(race)
+  Ok(ride)
 }
 
 async fn handle_find(

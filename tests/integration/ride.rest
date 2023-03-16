@@ -1,19 +1,19 @@
 @weroApi = {{protocol}}://{{hostname}}:{{port}}/api
 
-@raceId = 63e92867d5bbd2fef288ebb5
-GET {{weroApi}}/race.get?id={{raceId}}
+@rideId = 63e92867d5bbd2fef288ebb5
+GET {{weroApi}}/ride.get?id={{rideId}}
 
 ###
 
-GET {{weroApi}}/race.find
+GET {{weroApi}}/ride.find
 
 ###
 
-@raceName = Gfny
-@raceCity = Villavicencio
-GET {{weroApi}}/race.find
-    ?name={{raceName}}
-    &city={{raceCity}}
+@rideName = Gfny
+@rideCity = Villavicencio
+GET {{weroApi}}/ride.find
+    ?name={{rideName}}
+    &city={{rideCity}}
 
 ###
 
