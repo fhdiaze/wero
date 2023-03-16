@@ -17,7 +17,7 @@ GET {{weroApi}}/race.find
 
 ###
 
-POST {{weroApi}}/race.create
+POST {{weroApi}}/ride.create
 Content-Type: application/json
 
 {
