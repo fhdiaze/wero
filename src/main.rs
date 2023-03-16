@@ -1,22 +1,16 @@
 #![deny(nonstandard_style)]
 use crate::modules::race;
-use axum::{
-  error_handling::HandleErrorLayer,
-  http::{Method, StatusCode},
-  Router,
-};
+use axum::{http::Method, Router};
 use infra::{
-  api::handler::handle,
   config::Config,
-  db::{self, traits::DynDbClient},
-  error::AppError,
+  db::{client::Client, traits::DynDbClient},
 };
 use std::{net::SocketAddr, sync::Arc};
 use tower::ServiceBuilder;
 use tower_http::{
   classify::{ServerErrorsAsFailures, SharedClassifier},
   cors::{Any, CorsLayer},
-  trace::{DefaultMakeSpan, DefaultOnRequest, DefaultOnResponse, TraceLayer},
+  trace::{DefaultOnRequest, DefaultOnResponse, TraceLayer},
 };
 use tracing::Level;
 
@@ -31,7 +25,6 @@ fn router() -> Router<DynDbClient> {
 
 fn trace_layer() -> TraceLayer<SharedClassifier<ServerErrorsAsFailures>> {
   TraceLayer::new_for_http()
-    .make_span_with(DefaultMakeSpan::new().include_headers(true))
     .on_request(DefaultOnRequest::new().level(Level::INFO))
     .on_response(DefaultOnResponse::new().level(Level::INFO))
 }
@@ -43,7 +36,11 @@ fn cors_layer() -> CorsLayer {
 }
 
 async fn db_client(config: &Config) -> DynDbClient {
-  Arc::new(db::client::Client::new(&config.db).await.unwrap()) as DynDbClient
+  let client = Client::new(&config.db)
+    .await
+    .expect("Error creating DB client");
+
+  Arc::new(client) as DynDbClient
 }
 
 #[tokio::main]

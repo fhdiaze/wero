@@ -22,6 +22,8 @@ Content-Type: application/json
 
 {
     "name": "test",
+    "description": "Nice race to have fun",
+    "startAt": "2023-12-16 16:40:36Z",
     "route": {
         "distance": 1.2,
         "elevation": 1200,
@@ -29,7 +31,6 @@ Content-Type: application/json
         "description": "Small hills of 100m or 200m"
     },
     "discipline": "Road",
-    "date": "2023-12-16 16:40:36Z",
     "location": {
         "address": "Centro",
         "city": "Sopo",

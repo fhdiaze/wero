@@ -8,10 +8,12 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize)]
+#[serde(deny_unknown_fields, rename_all = "camelCase")]
 pub struct Command {
   pub name: String,
+  pub description: String,
   pub route: Route,
-  pub date: DateTime<Utc>,
+  pub start_at: DateTime<Utc>,
   pub discipline: Discipline,
   pub location: Location,
   pub image: String,
@@ -21,6 +23,8 @@ pub async fn handle(db: DynDbClient, cmd: Command) -> Result<RaceVm> {
   let race = Race::new(
     None,
     cmd.name,
+    cmd.description,
+    cmd.start_at,
     cmd.route,
     cmd.discipline,
     cmd.location,

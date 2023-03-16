@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 use futures::stream::TryStreamExt;
 use mongodb::bson::doc;
 use serde::{Deserialize, Serialize};
@@ -79,9 +80,12 @@ impl LocationVm {
 }
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct RaceVm {
   id: String,
   name: String,
+  description: String,
+  start_at: DateTime<Utc>,
   distance: f64,
   location: LocationVm,
 }
@@ -91,6 +95,8 @@ impl RaceVm {
     RaceVm {
       id: race.id.as_ref().unwrap().clone(),
       name: race.name.clone(),
+      description: race.description.clone(),
+      start_at: race.start_at,
       distance: race.route.distance,
       location: LocationVm::from(&race.location),
     }

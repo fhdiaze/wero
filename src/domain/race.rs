@@ -1,4 +1,5 @@
 use super::{discipline::Discipline, location::Location, route::Route};
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -10,6 +11,8 @@ pub struct Race {
   )]
   pub id: Option<String>,
   pub name: String,
+  pub description: String,
+  pub start_at: DateTime<Utc>,
   pub route: Route,
   pub discipline: Discipline,
   pub location: Location,
@@ -21,6 +24,8 @@ impl Race {
   pub fn new(
     id: Option<String>,
     name: String,
+    description: String,
+    start_at: DateTime<Utc>,
     route: Route,
     discipline: Discipline,
     location: Location,
@@ -29,6 +34,8 @@ impl Race {
     Race {
       id,
       name,
+      description,
+      start_at,
       route,
       discipline,
       location,
