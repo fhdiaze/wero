@@ -1,5 +1,5 @@
 #![deny(nonstandard_style)]
-use crate::modules::race;
+use crate::modules::ride;
 use axum::{http::Method, Router};
 use infra::{
   config::Config,
@@ -19,8 +19,8 @@ mod infra;
 mod modules;
 
 fn router() -> Router<DynDbClient> {
-  let races = race::controller::route();
-  Router::new().nest("/api", races)
+  let rides = ride::controller::route();
+  Router::new().nest("/api", rides)
 }
 
 fn trace_layer() -> TraceLayer<SharedClassifier<ServerErrorsAsFailures>> {

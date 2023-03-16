@@ -3,7 +3,7 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Race {
+pub struct Ride {
   #[serde(
     rename = "_id",
     with = "hex_string_as_object_id",
@@ -19,8 +19,8 @@ pub struct Race {
   pub image: String,
 }
 
-impl Race {
-  /// Creates a race
+impl Ride {
+  /// Creates a ride
   pub fn new(
     id: Option<String>,
     name: String,
@@ -31,7 +31,7 @@ impl Race {
     location: Location,
     image: String,
   ) -> Self {
-    Race {
+    Ride {
       id,
       name,
       description,

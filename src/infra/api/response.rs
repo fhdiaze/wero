@@ -1,4 +1,4 @@
-use crate::{infra::error::AppError, modules::race};
+use crate::{infra::error::AppError, modules::ride};
 use axum::{
   http::StatusCode,
   response::{IntoResponse, Response},
@@ -7,13 +7,13 @@ use axum::{
 
 use super::handler::handle;
 
-impl IntoResponse for race::get::RaceVm {
+impl IntoResponse for ride::get::RideVm {
   fn into_response(self) -> Response {
     Json(self).into_response()
   }
 }
 
-impl IntoResponse for race::create::RaceVm {
+impl IntoResponse for ride::create::RideVm {
   fn into_response(self) -> Response {
     Json(self).into_response()
   }

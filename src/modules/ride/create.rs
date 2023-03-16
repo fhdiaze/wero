@@ -1,6 +1,6 @@
 use crate::{
   domain::{
-    discipline::Discipline, location::Location, race::Race, route::Route,
+    discipline::Discipline, location::Location, ride::Ride, route::Route,
   },
   infra::{core::result::Result, db::traits::DynDbClient},
 };
@@ -19,8 +19,8 @@ pub struct Command {
   pub image: String,
 }
 
-pub async fn handle(db: DynDbClient, cmd: Command) -> Result<RaceVm> {
-  let race = Race::new(
+pub async fn handle(db: DynDbClient, cmd: Command) -> Result<RideVm> {
+  let ride = Ride::new(
     None,
     cmd.name,
     cmd.description,
@@ -30,19 +30,19 @@ pub async fn handle(db: DynDbClient, cmd: Command) -> Result<RaceVm> {
     cmd.location,
     cmd.image,
   );
-  let result = db.races().insert_one(race, None).await?;
-  let race_id = result.inserted_id.to_string();
+  let result = db.rides().insert_one(ride, None).await?;
+  let ride_id = result.inserted_id.to_string();
 
-  Ok(RaceVm::new(race_id))
+  Ok(RideVm::new(ride_id))
 }
 
 #[derive(Serialize)]
-pub struct RaceVm {
+pub struct RideVm {
   id: String,
 }
 
-impl RaceVm {
+impl RideVm {
   fn new(id: String) -> Self {
-    RaceVm { id }
+    RideVm { id }
   }
 }

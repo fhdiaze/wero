@@ -24,7 +24,7 @@ pub struct Log {
 pub struct Db {
   pub connection_string: String,
   pub db_name: String,
-  pub races_collection: String,
+  pub rides_collection: String,
 }
 
 #[derive(Debug, Deserialize)]

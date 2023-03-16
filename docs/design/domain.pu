@@ -1,5 +1,5 @@
 @startuml domain
-class Race {
+class Ride {
     name:String
     distance:Real
 }

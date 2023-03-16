@@ -1,7 +1,7 @@
 use mongodb::{self, Database};
 
 use crate::{
-  domain::race::Race,
+  domain::ride::Ride,
   infra::{config::Db, core::result::Result},
 };
 
@@ -9,7 +9,7 @@ use super::traits::DbClient;
 
 pub struct Client {
   database: Database,
-  races: mongodb::Collection<Race>,
+  rides: mongodb::Collection<Ride>,
 }
 
 impl Client {
@@ -18,18 +18,18 @@ impl Client {
       mongodb::options::ClientOptions::parse(&config.connection_string).await?;
     let client = mongodb::Client::with_options(options)?;
     let db = client.database(&config.db_name);
-    let races = db.collection::<Race>(&config.races_collection);
+    let rides = db.collection::<Ride>(&config.rides_collection);
 
     Ok(Self {
-      races,
+      rides,
       database: db,
     })
   }
 }
 
 impl DbClient for Client {
-  fn races(&self) -> &mongodb::Collection<Race> {
-    &self.races
+  fn rides(&self) -> &mongodb::Collection<Ride> {
+    &self.rides
   }
 
   fn database(&self) -> &Database {

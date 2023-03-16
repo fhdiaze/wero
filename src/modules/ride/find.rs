@@ -4,7 +4,7 @@ use mongodb::bson::doc;
 use serde::{Deserialize, Serialize};
 
 use crate::domain::location::Location;
-use crate::domain::race::Race;
+use crate::domain::ride::Ride;
 use crate::infra::{
   core::{page::Page, result::Result},
   db::traits::DynDbClient,
@@ -31,16 +31,16 @@ impl Query {
   }
 }
 
-pub async fn handle(db: DynDbClient, query: Query) -> Result<Page<RaceVm>> {
-  let races = find_races(db, query).await?;
-  let races_vm: Vec<RaceVm> =
-    races.into_iter().map(|r| RaceVm::from(&r)).collect();
-  let page_size = races_vm.len();
+pub async fn handle(db: DynDbClient, query: Query) -> Result<Page<RideVm>> {
+  let rides = find_rides(db, query).await?;
+  let rides_vm: Vec<RideVm> =
+    rides.into_iter().map(|r| RideVm::from(&r)).collect();
+  let page_size = rides_vm.len();
 
-  Ok(Page::new(races_vm, 1, page_size, 200))
+  Ok(Page::new(rides_vm, 1, page_size, 200))
 }
 
-async fn find_races(db: DynDbClient, query: Query) -> Result<Vec<Race>> {
+async fn find_rides(db: DynDbClient, query: Query) -> Result<Vec<Ride>> {
   let mut filter = doc! {};
 
   if query.name.is_some() {
@@ -54,10 +54,10 @@ async fn find_races(db: DynDbClient, query: Query) -> Result<Vec<Race>> {
   if query.country.is_some() {
     filter.insert("location.country", query.country.unwrap());
   }
-  let races: Vec<Race> =
-    db.races().find(filter, None).await?.try_collect().await?;
+  let rides: Vec<Ride> =
+    db.rides().find(filter, None).await?.try_collect().await?;
 
-  Ok(races)
+  Ok(rides)
 }
 
 #[derive(Serialize)]
@@ -81,7 +81,7 @@ impl LocationVm {
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct RaceVm {
+pub struct RideVm {
   id: String,
   name: String,
   description: String,
@@ -90,15 +90,15 @@ pub struct RaceVm {
   location: LocationVm,
 }
 
-impl RaceVm {
-  fn from(race: &Race) -> Self {
-    RaceVm {
-      id: race.id.as_ref().unwrap().clone(),
-      name: race.name.clone(),
-      description: race.description.clone(),
-      start_at: race.start_at,
-      distance: race.route.distance,
-      location: LocationVm::from(&race.location),
+impl RideVm {
+  fn from(ride: &Ride) -> Self {
+    RideVm {
+      id: ride.id.as_ref().unwrap().clone(),
+      name: ride.name.clone(),
+      description: ride.description.clone(),
+      start_at: ride.start_at,
+      distance: ride.route.distance,
+      location: LocationVm::from(&ride.location),
     }
   }
 }

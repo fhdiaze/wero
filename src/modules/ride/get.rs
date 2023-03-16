@@ -1,5 +1,5 @@
 use crate::{
-  domain::{location::Location, race::Race, route::Route},
+  domain::{location::Location, ride::Ride, route::Route},
   infra::{core::result::Result, db::traits::DynDbClient, error::AppError},
 };
 use bson::{doc, oid::ObjectId};
@@ -8,17 +8,17 @@ use std::str::FromStr;
 
 #[derive(Deserialize)]
 pub struct Query {
-  /// The id of the race
+  /// The id of the ride
   id: String,
 }
 
-pub async fn handle(db: DynDbClient, query: Query) -> Result<RaceVm> {
+pub async fn handle(db: DynDbClient, query: Query) -> Result<RideVm> {
   let id = ObjectId::from_str(&query.id).unwrap();
   let filter = doc! {"_id": id };
-  let opt_race = db.races().find_one(Some(filter), None).await?;
+  let opt_race = db.rides().find_one(Some(filter), None).await?;
 
   match opt_race {
-    Some(race) => Ok(RaceVm::from(&race)),
+    Some(race) => Ok(RideVm::from(&race)),
     None => Err(AppError::NotFound(format!(
       "No race was found with id={}",
       query.id
@@ -27,7 +27,7 @@ pub async fn handle(db: DynDbClient, query: Query) -> Result<RaceVm> {
 }
 
 #[derive(Serialize)]
-pub struct RaceVm {
+pub struct RideVm {
   id: String,
   name: String,
   route: RouteVm,
@@ -72,13 +72,13 @@ impl RouteVm {
   }
 }
 
-impl RaceVm {
-  fn from(race: &Race) -> Self {
-    RaceVm {
-      id: race.id.clone().unwrap(),
-      name: race.name.clone(),
-      route: RouteVm::from(&race.route),
-      location: LocationVm::from(&race.location),
+impl RideVm {
+  fn from(ride: &Ride) -> Self {
+    RideVm {
+      id: ride.id.clone().unwrap(),
+      name: ride.name.clone(),
+      route: RouteVm::from(&ride.route),
+      location: LocationVm::from(&ride.location),
     }
   }
 }

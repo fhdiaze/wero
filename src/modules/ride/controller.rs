@@ -12,7 +12,7 @@ use axum::{
 async fn handle_create(
   State(db): State<DynDbClient>,
   Json(cmd): Json<create::Command>,
-) -> Result<create::RaceVm> {
+) -> Result<create::RideVm> {
   let race = create::handle(db, cmd).await?;
 
   Ok(race)
@@ -21,7 +21,7 @@ async fn handle_create(
 async fn handle_get(
   State(db): State<DynDbClient>,
   Query(query): Query<get::Query>,
-) -> Result<get::RaceVm> {
+) -> Result<get::RideVm> {
   let race = get::handle(db, query).await?;
 
   Ok(race)
@@ -30,16 +30,16 @@ async fn handle_get(
 async fn handle_find(
   State(db): State<DynDbClient>,
   Query(query): Query<find::Query>,
-) -> Result<Page<find::RaceVm>> {
+) -> Result<Page<find::RideVm>> {
   let query = find::Query::new(query.name, query.city, query.country);
-  let races = find::handle(db, query).await?;
+  let rides = find::handle(db, query).await?;
 
-  Ok(races)
+  Ok(rides)
 }
 
 pub fn route() -> Router<DynDbClient> {
   Router::new()
-    .route("/race.create", post(handle_create))
-    .route("/race.get", get(handle_get))
-    .route("/race.find", get(handle_find))
+    .route("/ride.create", post(handle_create))
+    .route("/ride.get", get(handle_get))
+    .route("/ride.find", get(handle_find))
 }
