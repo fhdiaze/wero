@@ -31,11 +31,12 @@ Content-Type: application/json
         "description": "Small hills of 100m or 200m"
     },
     "discipline": "Road",
+    "category": "Race",
     "location": {
         "address": "Centro",
         "city": "Sopo",
         "region": "Cundinamarca",
         "country": "Colombia"
     },
-    "image": "empty.png"
+    "website": "https://grocer.nz"
 }

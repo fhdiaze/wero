@@ -1,4 +1,6 @@
-use super::{discipline::Discipline, location::Location, route::Route};
+use super::{
+  category::Category, discipline::Discipline, location::Location, route::Route,
+};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
@@ -15,8 +17,9 @@ pub struct Ride {
   pub start_at: DateTime<Utc>,
   pub route: Route,
   pub discipline: Discipline,
+  pub category: Category,
   pub location: Location,
-  pub image: String,
+  pub website: String,
 }
 
 impl Ride {
@@ -28,8 +31,9 @@ impl Ride {
     start_at: DateTime<Utc>,
     route: Route,
     discipline: Discipline,
+    category: Category,
     location: Location,
-    image: String,
+    website: String,
   ) -> Self {
     Ride {
       id,
@@ -38,8 +42,9 @@ impl Ride {
       start_at,
       route,
       discipline,
+      category,
       location,
-      image,
+      website,
     }
   }
 }

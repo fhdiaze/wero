@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::domain::location::Location;
 use crate::domain::ride::Ride;
+use crate::domain::route::Route;
 use crate::infra::{
   core::{page::Page, result::Result},
   db::traits::DynDbClient,
@@ -80,14 +81,36 @@ impl LocationVm {
 }
 
 #[derive(Serialize)]
+pub struct RouteVm {
+  distance: f64,
+  elevation: i32,
+  profile: String,
+  description: String,
+}
+
+impl RouteVm {
+  fn from(route: &Route) -> Self {
+    RouteVm {
+      distance: route.distance,
+      elevation: route.elevation,
+      profile: route.profile.clone(),
+      description: route.description.clone(),
+    }
+  }
+}
+
+#[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct RideVm {
   id: String,
   name: String,
   description: String,
   start_at: DateTime<Utc>,
-  distance: f64,
+  discipline: String,
+  category: String,
+  route: RouteVm,
   location: LocationVm,
+  website: String,
 }
 
 impl RideVm {
@@ -97,8 +120,11 @@ impl RideVm {
       name: ride.name.clone(),
       description: ride.description.clone(),
       start_at: ride.start_at,
-      distance: ride.route.distance,
+      discipline: ride.discipline.to_string(),
+      category: ride.category.to_string(),
+      route: RouteVm::from(&ride.route),
       location: LocationVm::from(&ride.location),
+      website: ride.website.clone(),
     }
   }
 }
