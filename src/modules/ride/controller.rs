@@ -1,6 +1,9 @@
 use super::{create, find, get};
 use crate::infra::{
-  core::{page::Page, result::Result},
+  core::{
+    paging::{Cursor, Page},
+    result::Result,
+  },
   db::traits::DynDbClient,
 };
 use axum::{
@@ -29,10 +32,9 @@ async fn handle_get(
 
 async fn handle_find(
   State(db): State<DynDbClient>,
-  Query(query): Query<find::Query>,
+  Json(cursor): Json<Cursor<find::Query>>,
 ) -> Result<Page<find::RideVm>> {
-  let query = find::Query::new(query.name, query.city, query.country);
-  let rides = find::handle(db, query).await?;
+  let rides = find::handle(db, cursor).await?;
 
   Ok(rides)
 }

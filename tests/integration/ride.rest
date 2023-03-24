@@ -6,6 +6,15 @@ GET {{weroApi}}/ride.get?id={{rideId}}
 ###
 
 GET {{weroApi}}/ride.find
+Content-Type: application/json
+
+{
+  "query": {
+    "country": "Colombia"
+  },
+  "size": 10,
+  "continuationToken": "641d291e119fd50fded67866"
+}
 
 ###
 
@@ -21,8 +30,8 @@ POST {{weroApi}}/ride.create
 Content-Type: application/json
 
 {
-    "name": "test",
-    "description": "Nice race to have fun",
+    "name": "My Race",
+    "description": "Race taranaki",
     "startAt": "2023-12-16 16:40:36Z",
     "route": {
         "distance": 1.2,

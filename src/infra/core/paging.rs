@@ -2,7 +2,7 @@ use axum::{
   response::{IntoResponse, Response},
   Json,
 };
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize)]
 pub struct Page<T> {
@@ -35,4 +35,17 @@ impl<T: Serialize> IntoResponse for Page<T> {
   fn into_response(self) -> Response {
     Json(self).into_response()
   }
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Cursor<Query> {
+  pub query: Option<Query>,
+  pub continuation_token: Option<String>,
+  #[serde(default = "default_size")]
+  pub size: i64,
+}
+
+fn default_size() -> i64 {
+  10
 }
