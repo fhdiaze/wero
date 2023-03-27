@@ -7,19 +7,3 @@ pub struct Route {
   pub profile: String,
   pub description: String,
 }
-
-impl Route {
-  fn new(
-    distance: f64,
-    elevation: i32,
-    profile: String,
-    description: String,
-  ) -> Self {
-    Route {
-      distance,
-      elevation,
-      profile,
-      description,
-    }
-  }
-}

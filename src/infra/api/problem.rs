@@ -76,6 +76,10 @@ impl Kind {
       Kind::NotFound => {
         StatusCode::NOT_FOUND.canonical_reason().unwrap().to_owned()
       }
+      Kind::BadRequest => StatusCode::BAD_REQUEST
+        .canonical_reason()
+        .unwrap()
+        .to_owned(),
       _ => StatusCode::INTERNAL_SERVER_ERROR
         .canonical_reason()
         .unwrap()
@@ -87,6 +91,9 @@ impl Kind {
     match self {
       Kind::NotFound => {
         "https://tools.ietf.org/html/rfc7231#section-6.5.4".to_owned()
+      }
+      Kind::BadRequest => {
+        "https://tools.ietf.org/html/rfc7231#section-6.5.1".to_owned()
       }
       _ => "https://tools.ietf.org/html/rfc7231#section-6.6.1".to_owned(),
     }

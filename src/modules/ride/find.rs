@@ -1,12 +1,3 @@
-use std::str::FromStr;
-
-use bson::oid::ObjectId;
-use chrono::{DateTime, Utc};
-use futures::stream::TryStreamExt;
-use mongodb::bson::doc;
-use mongodb::options::FindOptions;
-use serde::{Deserialize, Serialize};
-
 use crate::domain::location::Location;
 use crate::domain::ride::Ride;
 use crate::domain::route::Route;
@@ -15,26 +6,17 @@ use crate::infra::{
   core::{paging::Page, result::Result},
   db::traits::DynDbClient,
 };
+use chrono::{DateTime, Utc};
+use futures::stream::TryStreamExt;
+use mongodb::bson::doc;
+use mongodb::options::FindOptions;
+use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize)]
 pub struct Query {
   pub name: Option<String>,
   pub city: Option<String>,
   pub country: Option<String>,
-}
-
-impl Query {
-  pub fn new(
-    name: Option<String>,
-    city: Option<String>,
-    country: Option<String>,
-  ) -> Self {
-    Query {
-      name,
-      city,
-      country,
-    }
-  }
 }
 
 pub async fn handle(
@@ -60,7 +42,7 @@ async fn find_rides(
   let mut filter = doc! {};
 
   if let Some(continuation_token) = cursor.continuation_token {
-    filter.insert("_id", doc! { "$lt": ObjectId::from_str(&continuation_token).unwrap() });
+    filter.insert("_id", doc! { "$lt": continuation_token });
   }
 
   if let Some(query) = cursor.query {

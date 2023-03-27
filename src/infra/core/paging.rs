@@ -2,6 +2,7 @@ use axum::{
   response::{IntoResponse, Response},
   Json,
 };
+use bson::oid::ObjectId;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize)]
@@ -41,7 +42,7 @@ impl<T: Serialize> IntoResponse for Page<T> {
 #[serde(rename_all = "camelCase")]
 pub struct Cursor<Query> {
   pub query: Option<Query>,
-  pub continuation_token: Option<String>,
+  pub continuation_token: Option<ObjectId>,
   #[serde(default = "default_size")]
   pub size: i64,
 }

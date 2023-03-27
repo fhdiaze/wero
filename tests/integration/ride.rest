@@ -12,17 +12,30 @@ Content-Type: application/json
   "query": {
     "country": "Colombia"
   },
-  "size": 10,
+  "size": 1,
   "continuationToken": "641d291e119fd50fded67866"
 }
 
 ###
 
-@rideName = Gfny
-@rideCity = Villavicencio
+@rideName = My Race
+@rideCity = Sopo
 GET {{weroApi}}/ride.find
-    ?name={{rideName}}
-    &city={{rideCity}}
+Content-Type: application/json
+
+{
+  "query": {
+    "name": "{{rideName}}",
+    "city": "{{rideCity}}"
+  }
+}
+
+###
+
+GET {{weroApi}}/ride.find
+Content-Type: application/json
+
+{}
 
 ###
 
