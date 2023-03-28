@@ -1,6 +1,6 @@
 @weroApi = {{protocol}}://{{hostname}}:{{port}}/api
 
-@rideId = 63e92867d5bbd2fef288ebb5
+@rideId = 6415900fe6b67acb8f756d15
 GET {{weroApi}}/ride.get?id={{rideId}}
 
 ###
@@ -35,7 +35,10 @@ Content-Type: application/json
 GET {{weroApi}}/ride.find
 Content-Type: application/json
 
-{}
+{
+  "size": 2,
+  "continuationToken": "641d291e119fd50fded67866"
+}
 
 ###
 

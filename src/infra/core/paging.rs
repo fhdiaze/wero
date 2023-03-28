@@ -6,11 +6,11 @@ use bson::oid::ObjectId;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Page<T> {
   items: Vec<T>,
-  page: usize,
   size: usize,
-  total: usize,
+  continuation_token: Option<String>,
 }
 
 impl<T> Page<T> {
@@ -19,15 +19,13 @@ impl<T> Page<T> {
   /// # Arguments
   ///
   /// * `items` - The items of the page
-  /// * `page` - The index of the page
   /// * `size` - The size of the page
-  /// * `total` - The total items
-  pub fn new(items: Vec<T>, page: usize, size: usize, total: usize) -> Self {
+  /// * `continuation_token` - The continuation token used to get the next bunch of items
+  pub fn new(items: Vec<T>, size: usize, continuation_token: Option<String>) -> Self {
     Page {
       items,
-      page,
       size,
-      total,
+      continuation_token,
     }
   }
 }

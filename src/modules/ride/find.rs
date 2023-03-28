@@ -27,8 +27,9 @@ pub async fn handle(
   let rides_vm: Vec<RideVm> =
     rides.into_iter().map(|r| RideVm::from(&r)).collect();
   let page_size = rides_vm.len();
+  let continuation_token = rides_vm.last().map(|i| i.id.clone());
 
-  Ok(Page::new(rides_vm, 1, page_size, 200))
+  Ok(Page::new(rides_vm, page_size, continuation_token))
 }
 
 async fn find_rides(
