@@ -43,5 +43,5 @@ pub fn route() -> Router<DynDbClient> {
   Router::new()
     .route("/ride.create", post(handle_create))
     .route("/ride.get", get(handle_get))
-    .route("/ride.find", get(handle_find))
+    .route("/ride.find", post(handle_find))
 }

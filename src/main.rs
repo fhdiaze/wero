@@ -1,6 +1,6 @@
 #![deny(nonstandard_style)]
 use crate::modules::ride;
-use axum::{http::Method, Router};
+use axum::{http::{Method, header::CONTENT_TYPE}, Router};
 use infra::{
   config::Config,
   db::{client::Client, traits::DynDbClient},
@@ -32,6 +32,7 @@ fn trace_layer() -> TraceLayer<SharedClassifier<ServerErrorsAsFailures>> {
 fn cors_layer() -> CorsLayer {
   CorsLayer::new()
     .allow_methods([Method::GET, Method::POST])
+    .allow_headers([CONTENT_TYPE])
     .allow_origin(Any)
 }
 
