@@ -1,6 +1,9 @@
 #![deny(nonstandard_style)]
 use crate::modules::ride;
-use axum::{http::{Method, header::CONTENT_TYPE}, Router};
+use axum::{
+  http::{header::CONTENT_TYPE, Method},
+  Router,
+};
 use infra::{
   config::Config,
   db::{client::Client, traits::DynDbClient},
@@ -17,32 +20,6 @@ use tracing::Level;
 mod domain;
 mod infra;
 mod modules;
-
-fn router() -> Router<DynDbClient> {
-  let rides = ride::controller::route();
-  Router::new().nest("/api", rides)
-}
-
-fn trace_layer() -> TraceLayer<SharedClassifier<ServerErrorsAsFailures>> {
-  TraceLayer::new_for_http()
-    .on_request(DefaultOnRequest::new().level(Level::INFO))
-    .on_response(DefaultOnResponse::new().level(Level::INFO))
-}
-
-fn cors_layer() -> CorsLayer {
-  CorsLayer::new()
-    .allow_methods([Method::GET, Method::POST])
-    .allow_headers([CONTENT_TYPE])
-    .allow_origin(Any)
-}
-
-async fn db_client(config: &Config) -> DynDbClient {
-  let client = Client::new(&config.db)
-    .await
-    .expect("Error creating DB client");
-
-  Arc::new(client) as DynDbClient
-}
 
 #[tokio::main]
 async fn main() {
@@ -66,4 +43,31 @@ async fn main() {
     .serve(router.into_make_service())
     .await
     .unwrap();
+}
+
+fn router() -> Router<DynDbClient> {
+  let rides = ride::controller::route();
+
+  Router::new().nest("/api", rides)
+}
+
+fn trace_layer() -> TraceLayer<SharedClassifier<ServerErrorsAsFailures>> {
+  TraceLayer::new_for_http()
+    .on_request(DefaultOnRequest::new().level(Level::INFO))
+    .on_response(DefaultOnResponse::new().level(Level::INFO))
+}
+
+fn cors_layer() -> CorsLayer {
+  CorsLayer::new()
+    .allow_methods([Method::GET, Method::POST])
+    .allow_headers([CONTENT_TYPE])
+    .allow_origin(Any)
+}
+
+async fn db_client(config: &Config) -> DynDbClient {
+  let client = Client::new(&config.db)
+    .await
+    .expect("Error creating DB client");
+
+  Arc::new(client) as DynDbClient
 }

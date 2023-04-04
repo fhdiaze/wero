@@ -73,7 +73,7 @@ impl RouteVm {
 impl RideVm {
   fn from(ride: &Ride) -> Self {
     RideVm {
-      id: ride.id.clone().unwrap(),
+      id: ride.id.unwrap().to_string(),
       name: ride.name.clone(),
       route: RouteVm::from(&ride.route),
       location: LocationVm::from(&ride.location),

@@ -42,12 +42,21 @@ Content-Type: application/json
 
 ###
 
+POST {{weroApi}}/ride.find
+Content-Type: application/json
+
+{
+}
+
+###
+
+@RaceCode = 05
 POST {{weroApi}}/ride.create
 Content-Type: application/json
 
 {
-    "name": "My Race",
-    "description": "Race taranaki",
+    "name": "Race {{RaceCode}}",
+    "description": "Race {{RaceCode}}",
     "startAt": "2023-12-16 16:40:36Z",
     "route": {
         "distance": 1.2,

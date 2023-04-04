@@ -6,6 +6,7 @@ use crate::infra::{
   core::{paging::Page, result::Result},
   db::traits::DynDbClient,
 };
+use bson::Document;
 use chrono::{DateTime, Utc};
 use futures::stream::TryStreamExt;
 use mongodb::bson::doc;
@@ -40,7 +41,24 @@ async fn find_rides(
     .sort(doc! {"_id": -1})
     .limit(cursor.size)
     .build();
+
+  let filter = build_filter(cursor);
+
+  let rides: Vec<Ride> = db
+    .rides()
+    .find(filter, options)
+    .await?
+    .try_collect()
+    .await?;
+
+  Ok(rides)
+}
+
+fn build_filter(cursor: Cursor<Query>) -> Document {
   let mut filter = doc! {};
+
+  // Get just future rides
+  filter.insert("start_at", doc! {"$gt": Utc::now().to_string()});
 
   if let Some(continuation_token) = cursor.continuation_token {
     filter.insert("_id", doc! { "$lt": continuation_token });
@@ -60,14 +78,7 @@ async fn find_rides(
     }
   }
 
-  let rides: Vec<Ride> = db
-    .rides()
-    .find(filter, options)
-    .await?
-    .try_collect()
-    .await?;
-
-  Ok(rides)
+  filter
 }
 
 #[derive(Serialize)]
@@ -125,7 +136,7 @@ pub struct RideVm {
 impl RideVm {
   fn from(ride: &Ride) -> Self {
     RideVm {
-      id: ride.id.as_ref().unwrap().clone(),
+      id: ride.id.unwrap().to_string(),
       name: ride.name.clone(),
       description: ride.description.clone(),
       start_at: ride.start_at,
