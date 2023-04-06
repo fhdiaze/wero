@@ -1,5 +1,5 @@
 use super::{
-  category::Category, discipline::Discipline, location::Location, route::Route,
+  format::Format, discipline::Discipline, location::Location, route::Route,
 };
 use bson::oid::ObjectId;
 use chrono::{DateTime, Utc};
@@ -14,7 +14,7 @@ pub struct Ride {
   pub start_at: DateTime<Utc>,
   pub route: Route,
   pub discipline: Discipline,
-  pub category: Category,
+  pub format: Format,
   pub location: Location,
   pub website: String,
 }
@@ -28,7 +28,7 @@ impl Ride {
     start_at: DateTime<Utc>,
     route: Route,
     discipline: Discipline,
-    category: Category,
+    format: Format,
     location: Location,
     website: String,
   ) -> Self {
@@ -39,7 +39,7 @@ impl Ride {
       start_at,
       route,
       discipline,
-      category,
+      format,
       location,
       website,
     }

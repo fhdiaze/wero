@@ -16,6 +16,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Deserialize)]
 pub struct Query {
   pub name: Option<String>,
+  pub description: Option<String>,
   pub city: Option<String>,
   pub country: Option<String>,
 }
@@ -65,18 +66,26 @@ fn build_filter(cursor: Cursor<Query>) -> Document {
   }
 
   if let Some(query) = cursor.query {
-    if let Some(name) = query.name {
-      filter.insert("name", name);
+    let mut conditions: Vec<Document> = vec![];
+
+    if let Some(name) = query.name.filter(|x| !x.is_empty()) {
+      conditions.push(doc! {"name": {"$regex": name, "$options": "i"}});
     }
 
-    if let Some(city) = query.city {
-      filter.insert("location.city", city);
+    if let Some(city) = query.city.filter(|x| !x.is_empty()) {
+      conditions.push(doc! { "location.city": {"$regex": city, "$options": "i"} });
     }
 
-    if let Some(country) = query.country {
-      filter.insert("location.country", country);
+    if let Some(country) = query.country.filter(|x| !x.is_empty()) {
+      conditions.push(doc! { "location.country": {"$regex": country, "$options": "i"} });
+    }
+
+    if !conditions.is_empty() {
+      filter.insert("$or", conditions);
     }
   }
+
+  tracing::info!("Query sent={}", filter);
 
   filter
 }
@@ -141,7 +150,7 @@ impl RideVm {
       description: ride.description.clone(),
       start_at: ride.start_at,
       discipline: ride.discipline.to_string(),
-      category: ride.category.to_string(),
+      category: ride.format.to_string(),
       route: RouteVm::from(&ride.route),
       location: LocationVm::from(&ride.location),
       website: ride.website.clone(),

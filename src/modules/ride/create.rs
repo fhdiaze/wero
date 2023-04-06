@@ -1,6 +1,6 @@
 use crate::{
   domain::{
-    category::Category, discipline::Discipline, location::Location, ride::Ride,
+    format::Format, discipline::Discipline, location::Location, ride::Ride,
     route::Route,
   },
   infra::{core::result::Result, db::traits::DynDbClient},
@@ -16,7 +16,7 @@ pub struct Command {
   pub route: Route,
   pub start_at: DateTime<Utc>,
   pub discipline: Discipline,
-  pub category: Category,
+  pub format: Format,
   pub location: Location,
   pub website: String,
 }
@@ -29,7 +29,7 @@ pub async fn handle(db: DynDbClient, cmd: Command) -> Result<RideVm> {
     cmd.start_at,
     cmd.route,
     cmd.discipline,
-    cmd.category,
+    cmd.format,
     cmd.location,
     cmd.website,
   );
