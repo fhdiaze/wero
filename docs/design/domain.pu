@@ -1,0 +1,16 @@
+@startuml domain
+class Ride {
+    name:String
+    distance:Real
+}
+enum Discipline {
+    Road
+    Mountain
+    Track
+}
+class Location {
+    city:String
+    region:String
+    country:String
+}
+@enduml

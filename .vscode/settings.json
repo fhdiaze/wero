@@ -1,0 +1,26 @@
+{
+    "cSpell.words": [
+        "actix",
+        "bson",
+        "chrono",
+        "deploydev",
+        "serde",
+        "threadpool",
+        "WERO"
+    ],
+    "rest-client.environmentVariables": {
+        "$shared": {
+            "hostname": "172.18.96.1",
+            "port": "7878",
+            "protocol": "http",
+        },
+        "local": {
+            "hostname": "localhost",
+        },
+        "dev": {
+            "hostname": "devwero.azurewebsites.net",
+            "protocol": "https",
+            "port": "443"
+        }
+    }
+}

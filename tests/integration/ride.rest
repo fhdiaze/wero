@@ -1,0 +1,76 @@
+@weroApi = {{protocol}}://{{hostname}}:{{port}}/api
+
+@rideId = 6415900fe6b67acb8f756d15
+GET {{weroApi}}/ride.get?id={{rideId}}
+
+###
+
+POST {{weroApi}}/ride.find
+Content-Type: application/json
+
+{
+  "query": {
+    "country": "Colombia"
+  },
+  "size": 1,
+  "continuationToken": "641d291e119fd50fded67866"
+}
+
+###
+
+@rideName = My Race
+@rideCity = Sopo
+POST {{weroApi}}/ride.find
+Content-Type: application/json
+
+{
+  "query": {
+    "name": "{{rideName}}",
+    "city": "{{rideCity}}"
+  }
+}
+
+###
+
+POST {{weroApi}}/ride.find
+Content-Type: application/json
+
+{
+  "size": 2,
+  "continuationToken": "641d291e119fd50fded67866"
+}
+
+###
+
+POST {{weroApi}}/ride.find
+Content-Type: application/json
+
+{
+}
+
+###
+
+@RaceCode = 05
+POST {{weroApi}}/ride.create
+Content-Type: application/json
+
+{
+    "name": "Race {{RaceCode}}",
+    "description": "Race {{RaceCode}}",
+    "startAt": "2023-12-16 16:40:36Z",
+    "route": {
+        "distance": 1.2,
+        "elevation": 1200,
+        "profile": "flat",
+        "description": "Small hills of 100m or 200m"
+    },
+    "discipline": "Road",
+    "category": "Race",
+    "location": {
+        "address": "Centro",
+        "city": "Sopo",
+        "region": "Cundinamarca",
+        "country": "Colombia"
+    },
+    "website": "https://grocer.nz"
+}
