@@ -21,6 +21,11 @@
             "hostname": "devwero.azurewebsites.net",
             "protocol": "https",
             "port": "443"
+        },
+        "prod": {
+            "hostname": "wero.azurewebsites.net",
+            "protocol": "https",
+            "port": "443"
         }
     }
 }
