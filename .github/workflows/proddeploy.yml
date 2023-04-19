@@ -51,7 +51,7 @@ jobs:
       - name: deploy
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'wero'
+          app-name: 'prodwero'
           slot-name: 'production'
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
