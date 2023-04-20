@@ -23,7 +23,7 @@
             "port": "443"
         },
         "prod": {
-            "hostname": "wero.azurewebsites.net",
+            "hostname": "prodwero.azurewebsites.net",
             "protocol": "https",
             "port": "443"
         }
