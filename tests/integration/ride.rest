@@ -74,3 +74,29 @@ Content-Type: application/json
     },
     "website": "https://grocer.nz"
 }
+
+###
+
+POST {{weroApi}}/ride.create
+Content-Type: application/json
+
+{
+    "name": "CMC Gallipoli Cup - Handicap Race - Karaka",
+    "description": "This is a handicap race. Handicaps will be determined by the CMC committee with the aim of having a close finish between all starting groups",
+    "startAt": "2023-07-28 21:00:00Z",
+    "route": {
+        "distance": 80,
+        "elevation": 630,
+        "profile": "Rolling",
+        "description": "16km laps starting & finishing at Karaka Hall"
+    },
+    "discipline": "Road",
+    "format": "Race",
+    "location": {
+        "address": "319 Linwood Road, Karaka 2580",
+        "city": "Karaka",
+        "region": "Auckland",
+        "country": "New Zealand"
+    },
+    "website": "https://www.webscorer.com/register?raceid=310085"
+}
