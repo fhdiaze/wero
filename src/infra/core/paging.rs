@@ -2,15 +2,17 @@ use axum::{
   response::{IntoResponse, Response},
   Json,
 };
-use bson::oid::ObjectId;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Page<T> {
-  items: Vec<T>,
-  size: usize,
-  continuation_token: Option<String>,
+  /// The items of the page
+  pub items: Vec<T>,
+  /// The page number: 0, 1, ...
+  pub page: usize,
+  /// The size of the page
+  pub size: usize,
 }
 
 impl<T> Page<T> {
@@ -19,14 +21,10 @@ impl<T> Page<T> {
   /// # Arguments
   ///
   /// * `items` - The items of the page
+  /// * `page` - The number of the page: 0, 1, ...
   /// * `size` - The size of the page
-  /// * `continuation_token` - The continuation token used to get the next bunch of items
-  pub fn new(items: Vec<T>, size: usize, continuation_token: Option<String>) -> Self {
-    Page {
-      items,
-      size,
-      continuation_token,
-    }
+  pub fn new(items: Vec<T>, page: usize, size: usize) -> Self {
+    Page { items, page, size }
   }
 }
 
@@ -40,11 +38,16 @@ impl<T: Serialize> IntoResponse for Page<T> {
 #[serde(rename_all = "camelCase")]
 pub struct Cursor<Query> {
   pub query: Option<Query>,
-  pub continuation_token: Option<ObjectId>,
+  #[serde(default = "default_page")]
+  pub page: usize,
   #[serde(default = "default_size")]
-  pub size: i64,
+  pub size: usize,
 }
 
-fn default_size() -> i64 {
+fn default_page() -> usize {
+  0
+}
+
+fn default_size() -> usize {
   10
 }

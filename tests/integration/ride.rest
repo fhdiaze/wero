@@ -12,8 +12,8 @@ Content-Type: application/json
   "query": {
     "country": "Colombia"
   },
-  "size": 1,
-  "continuationToken": "641d291e119fd50fded67866"
+  "size": 3,
+  "page": 0
 }
 
 ###
@@ -37,7 +37,7 @@ Content-Type: application/json
 
 {
   "size": 2,
-  "continuationToken": "641d291e119fd50fded67866"
+  "page": 1
 }
 
 ###
