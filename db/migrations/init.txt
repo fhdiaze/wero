@@ -1,1 +1,0 @@
-db.rides.createIndex({ start_at: 1, _id: 1 });

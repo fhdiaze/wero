@@ -1,0 +1,17 @@
+[
+  {
+    "create": "rides"
+  },
+  {
+    "createIndexes": "rides",
+    "indexes": [
+      {
+        "key": {
+          "start_at": 1,
+          "_id": 1
+        },
+        "name": "i_start_at_id"
+      }
+    ]
+  }
+]
