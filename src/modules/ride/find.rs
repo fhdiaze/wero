@@ -25,22 +25,24 @@ pub async fn handle(
   db: DynDbClient,
   cursor: Cursor<Query>,
 ) -> Result<Page<RideVm>> {
+  let page = cursor.page;
   let rides = find_rides(db, cursor).await?;
   let rides_vm: Vec<RideVm> =
     rides.into_iter().map(|r| RideVm::from(&r)).collect();
-  let page_size = rides_vm.len();
-  let continuation_token = rides_vm.last().map(|i| i.id.clone());
+  let size = rides_vm.len();
 
-  Ok(Page::new(rides_vm, page_size, continuation_token))
+  Ok(Page::new(rides_vm, page, size))
 }
 
 async fn find_rides(
   db: DynDbClient,
   cursor: Cursor<Query>,
 ) -> Result<Vec<Ride>> {
+  let offset = cursor.page * cursor.size;
   let options = FindOptions::builder()
-    .sort(doc! {"_id": -1})
-    .limit(cursor.size)
+    .sort(doc! { "start_at": 1, "_id": 1 })
+    .skip(offset as u64)
+    .limit(cursor.size as i64)
     .build();
 
   let filter = build_filter(cursor);
@@ -61,10 +63,6 @@ fn build_filter(cursor: Cursor<Query>) -> Document {
   // Get just future rides
   filter.insert("start_at", doc! {"$gt": Utc::now().to_string()});
 
-  if let Some(continuation_token) = cursor.continuation_token {
-    filter.insert("_id", doc! { "$lt": continuation_token });
-  }
-
   if let Some(query) = cursor.query {
     let mut conditions: Vec<Document> = vec![];
 
@@ -73,11 +71,14 @@ fn build_filter(cursor: Cursor<Query>) -> Document {
     }
 
     if let Some(city) = query.city.filter(|x| !x.is_empty()) {
-      conditions.push(doc! { "location.city": {"$regex": city, "$options": "i"} });
+      conditions
+        .push(doc! { "location.city": {"$regex": city, "$options": "i"} });
     }
 
     if let Some(country) = query.country.filter(|x| !x.is_empty()) {
-      conditions.push(doc! { "location.country": {"$regex": country, "$options": "i"} });
+      conditions.push(
+        doc! { "location.country": {"$regex": country, "$options": "i"} },
+      );
     }
 
     if !conditions.is_empty() {
