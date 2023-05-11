@@ -11,8 +11,9 @@ on:
 
 jobs:
   restore:
-    name: restore
     runs-on: ubuntu-latest
+    permissions:
+      contents: read|write
     steps:
       - name: checkoutCode
         uses: actions/checkout@v3
