@@ -1,6 +1,5 @@
 name: restoreBranches
 concurrency: ${{ github.repository }}
-description: Restore branches to main
 run-name: ${{ github.actor }} run this workflow
 
 on:
