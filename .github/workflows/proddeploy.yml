@@ -1,4 +1,4 @@
-name: prod
+name: prodDeploy
 concurrency: prod
 run-name: ${{ github.actor }} run this workflow
 on:
