@@ -4,8 +4,10 @@
         "bson",
         "chrono",
         "deploydev",
+        "devwero",
         "serde",
         "threadpool",
+        "webapps",
         "WERO"
     ],
     "rest-client.environmentVariables": {
