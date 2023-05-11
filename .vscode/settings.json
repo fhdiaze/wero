@@ -5,6 +5,7 @@
         "chrono",
         "deploydev",
         "devwero",
+        "prodwero",
         "serde",
         "threadpool",
         "webapps",
