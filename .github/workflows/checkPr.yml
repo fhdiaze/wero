@@ -14,7 +14,7 @@ env:
 
 jobs:
   check:
-    name: check
+    name: checkPr
     runs-on: ubuntu-latest
     steps:
       - name: checkout
