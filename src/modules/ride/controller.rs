@@ -16,7 +16,7 @@ async fn handle_create(
   State(db): State<DynDbClient>,
   Json(cmd): Json<create::Command>,
 ) -> Result<create::RideVm> {
-  let ride = create::handle(db, cmd).await?;d
+  let ride = create::handle(db, cmd).await?;
 
   Ok(ride)
 }
@@ -25,7 +25,7 @@ async fn handle_get(
   State(db): State<DynDbClient>,
   Query(query): Query<get::Query>,
 ) -> Result<get::RideVm> {
-  let ride = get::handle(db, query).await?;x
+  let ride = get::handle(db, query).await?;
 
   Ok(ride)
 }
