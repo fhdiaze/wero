@@ -2,10 +2,6 @@ name: checkPr
 
 on:
   pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
     branches:
       - main
 
@@ -13,8 +9,8 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-    name: build
+  check:
+    name: checkPr
     runs-on: ubuntu-latest
     steps:
       - name: checkout
