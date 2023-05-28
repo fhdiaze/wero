@@ -16,8 +16,17 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
+      - name: installCargoAudit
+        run: cargo install cargo-audit
+
       - name: build
-        run: cargo build
+        run: cargo build --verbose
 
       - name: runTests
-        run: cargo test
+        run: cargo test --verbose
+
+      - name: clippy
+        run: cargo clippy --verbose -- -D warnings
+
+      - name: audit
+        run: cargo audit
