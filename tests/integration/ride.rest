@@ -81,16 +81,16 @@ POST {{weroApi}}/ride.create
 Content-Type: application/json
 
 {
-    "name": "Shimano Gravel Grind - Lake Taupo - Cycle Challenge",
-    "description": "Be a part of the growing gravel riding community in the epic, new Shimano Gravel Grind event. This 75km adventure event combines sealed and unsealed surfaces and showcases some of the unique points of difference and scenery that the Taupō district has to offer.",
-    "startAt": "2023-11-24 19:15:00Z",
+    "name": "Enduro - Lake Taupo - Cycle Challenge",
+    "description": "Enduro by name, enduro by nature. The Enduro uses the same course as the cornerstone event of the Lake Taupo Cycle Challenge, Round the Lake, TWICE!",
+    "startAt": "2023-11-24 13:30:00Z",
     "route": {
-        "distance": 75,
-        "elevation": 860,
+        "distance": 322,
+        "elevation": 1650,
         "profile": "Rolling",
-        "description": "Using local MTB tracks, gravel roads, farm tracks, and tar-sealed roads in the region, this event is all about the experience, but it also features a timed hill climb and sprint stage for those with a competitive spirit. As the course takes place on some private roads please do not ride on these at any time except on the event. The course is approximately 23% Tarseal, 56% Gravel roads, 16% Mountain Bike trails and 5% other. The Mountain Bike trails are mostly Grade 2 or very easy Grade 3."
+        "description": "The Enduro event complete two full laps of the lake which is approximately 322km using the Poihipi/Marotiri loop. Last year the winning male time was 9 hours 33 minutes. The winning female time was 10 hours 11 minutes."
     },
-    "discipline": "Gravel",
+    "discipline": "Road",
     "format": "Race",
     "location": {
         "address": "Redoubt Street, Taupō 3330",
@@ -98,5 +98,5 @@ Content-Type: application/json
         "region": "Waikato",
         "country": "New Zealand"
     },
-    "website": "https://www.cyclechallenge.com/shimano-gravel-grind"
+    "website": "https://www.cyclechallenge.com/enduro"
 }
