@@ -3,6 +3,7 @@
         "actix",
         "bson",
         "chrono",
+        "clippy",
         "deploydev",
         "devwero",
         "prodwero",
