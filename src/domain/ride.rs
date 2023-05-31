@@ -1,6 +1,7 @@
 use super::{
-  format::Format, discipline::Discipline, location::Location, route::Route,
+  discipline::Discipline, format::Format, location::Location, route::Route,
 };
+use crate::infra::{core::result::Result, error::AppError};
 use bson::oid::ObjectId;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
@@ -31,8 +32,14 @@ impl Ride {
     format: Format,
     location: Location,
     website: String,
-  ) -> Self {
-    Ride {
+  ) -> Result<Self> {
+    if name.is_empty() {
+      return Err(AppError::Validation(String::from(
+        "The name of a ride could not be empty",
+      )));
+    }
+
+    Ok(Ride {
       id,
       name,
       description,
@@ -42,6 +49,6 @@ impl Ride {
       format,
       location,
       website,
-    }
+    })
   }
 }
