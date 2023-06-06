@@ -1,3 +1,5 @@
+use crate::domain::contact::Contact;
+use crate::domain::details::Details;
 use crate::domain::location::Location;
 use crate::domain::ride::Ride;
 use crate::domain::route::Route;
@@ -92,6 +94,23 @@ fn build_filter(cursor: Cursor<Query>) -> Document {
 }
 
 #[derive(Serialize)]
+pub struct ContactVm {
+  pub website: String,
+  pub email: String,
+  pub phone: String,
+}
+
+impl ContactVm {
+  fn from(contact: &Contact) -> Self {
+    ContactVm {
+      email: contact.email.clone(),
+      phone: contact.phone.clone(),
+      website: contact.website.clone(),
+    }
+  }
+}
+
+#[derive(Serialize)]
 pub struct LocationVm {
   address: String,
   city: String,
@@ -116,6 +135,7 @@ pub struct RouteVm {
   elevation: i32,
   profile: String,
   description: String,
+  start: LocationVm,
 }
 
 impl RouteVm {
@@ -123,8 +143,26 @@ impl RouteVm {
     RouteVm {
       distance: route.distance,
       elevation: route.elevation,
-      profile: route.profile.clone(),
+      profile: route.profile.to_string(),
       description: route.description.clone(),
+      start: LocationVm::from(&route.start),
+    }
+  }
+}
+
+#[derive(Serialize)]
+pub struct DetailsVm {
+  route: RouteVm,
+  discipline: String,
+  format: String,
+}
+
+impl DetailsVm {
+  fn from(details: &Details) -> Self {
+    DetailsVm {
+      route: RouteVm::from(&details.route),
+      discipline: details.discipline.to_string(),
+      format: details.format.to_string(),
     }
   }
 }
@@ -136,11 +174,8 @@ pub struct RideVm {
   name: String,
   description: String,
   start_at: DateTime<Utc>,
-  discipline: String,
-  category: String,
-  route: RouteVm,
-  location: LocationVm,
-  website: String,
+  details: DetailsVm,
+  contact: ContactVm,
 }
 
 impl RideVm {
@@ -150,11 +185,8 @@ impl RideVm {
       name: ride.name.clone(),
       description: ride.description.clone(),
       start_at: ride.start_at,
-      discipline: ride.discipline.to_string(),
-      category: ride.format.to_string(),
-      route: RouteVm::from(&ride.route),
-      location: LocationVm::from(&ride.location),
-      website: ride.website.clone(),
+      details: DetailsVm::from(&ride.details),
+      contact: ContactVm::from(&ride.contact),
     }
   }
 }

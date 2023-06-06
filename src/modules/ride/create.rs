@@ -1,8 +1,5 @@
 use crate::{
-  domain::{
-    discipline::Discipline, format::Format, location::Location, ride::Ride,
-    route::Route,
-  },
+  domain::{contact::Contact, details::Details, ride::Ride},
   infra::{core::result::Result, db::traits::DynDbClient},
 };
 use chrono::{DateTime, Utc};
@@ -13,12 +10,9 @@ use serde::{Deserialize, Serialize};
 pub struct Command {
   pub name: String,
   pub description: String,
-  pub route: Route,
   pub start_at: DateTime<Utc>,
-  pub discipline: Discipline,
-  pub format: Format,
-  pub location: Location,
-  pub website: String,
+  pub details: Details,
+  pub contact: Contact,
 }
 
 pub async fn handle(db: DynDbClient, cmd: Command) -> Result<RideVm> {
@@ -27,11 +21,8 @@ pub async fn handle(db: DynDbClient, cmd: Command) -> Result<RideVm> {
     cmd.name,
     cmd.description,
     cmd.start_at,
-    cmd.route,
-    cmd.discipline,
-    cmd.format,
-    cmd.location,
-    cmd.website,
+    cmd.details,
+    cmd.contact,
   )?;
   let result = db.rides().insert_one(ride, None).await?;
   let ride_id = result.inserted_id.to_string();

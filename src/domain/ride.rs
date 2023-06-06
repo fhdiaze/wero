@@ -1,6 +1,4 @@
-use super::{
-  discipline::Discipline, format::Format, location::Location, route::Route,
-};
+use super::{contact::Contact, details::Details};
 use crate::infra::{core::result::Result, error::AppError};
 use bson::oid::ObjectId;
 use chrono::{DateTime, Utc};
@@ -13,11 +11,8 @@ pub struct Ride {
   pub name: String,
   pub description: String,
   pub start_at: DateTime<Utc>,
-  pub route: Route,
-  pub discipline: Discipline,
-  pub format: Format,
-  pub location: Location,
-  pub website: String,
+  pub details: Details,
+  pub contact: Contact,
 }
 
 impl Ride {
@@ -27,11 +22,8 @@ impl Ride {
     name: String,
     description: String,
     start_at: DateTime<Utc>,
-    route: Route,
-    discipline: Discipline,
-    format: Format,
-    location: Location,
-    website: String,
+    details: Details,
+    contact: Contact,
   ) -> Result<Self> {
     if name.is_empty() {
       return Err(AppError::Validation(String::from(
@@ -39,16 +31,13 @@ impl Ride {
       )));
     }
 
-    Ok(Ride {
+    Ok(Self {
       id,
       name,
       description,
       start_at,
-      route,
-      discipline,
-      format,
-      location,
-      website,
+      details,
+      contact,
     })
   }
 }
