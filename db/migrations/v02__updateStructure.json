@@ -1,0 +1,33 @@
+[
+  {
+    "update": "rides",
+    "updates": [
+      {
+        "q": {},
+        "u": [
+          {
+            "$set": {
+              "status": "Modified",
+              "comments": [
+                "$misc1",
+                "$misc2"
+              ]
+            }
+          },
+          {
+            "$unset": [
+              "misc1",
+              "misc2"
+            ]
+          }
+        ],
+        "multi": true
+      }
+    ],
+    "ordered": false,
+    "writeConcern": {
+      "w": "majority",
+      "wtimeout": 5000
+    }
+  }
+]

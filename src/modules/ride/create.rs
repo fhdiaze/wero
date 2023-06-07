@@ -5,6 +5,7 @@ use crate::{
   },
   infra::{core::result::Result, db::traits::DynDbClient},
 };
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize)]
@@ -12,6 +13,7 @@ use serde::{Deserialize, Serialize};
 pub struct Command {
   pub name: String,
   pub description: String,
+  pub start_at: DateTime<Utc>,
   pub route: Route,
   pub discipline: Discipline,
   pub format: Format,
@@ -23,6 +25,7 @@ pub async fn handle(db: DynDbClient, cmd: Command) -> Result<RideVm> {
     None,
     cmd.name,
     cmd.description,
+    cmd.start_at,
     cmd.route,
     cmd.discipline,
     cmd.format,

@@ -3,6 +3,7 @@ use super::{
 };
 use crate::infra::{core::result::Result, error::AppError};
 use bson::oid::ObjectId;
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -11,6 +12,7 @@ pub struct Ride {
   pub id: Option<ObjectId>,
   pub name: String,
   pub description: String,
+  pub start_at: DateTime<Utc>,
   pub route: Route,
   pub discipline: Discipline,
   pub format: Format,
@@ -23,6 +25,7 @@ impl Ride {
     id: Option<ObjectId>,
     name: String,
     description: String,
+    start_at: DateTime<Utc>,
     route: Route,
     discipline: Discipline,
     format: Format,
@@ -38,6 +41,7 @@ impl Ride {
       id,
       name,
       description,
+      start_at,
       route,
       discipline,
       format,
