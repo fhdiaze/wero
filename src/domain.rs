@@ -1,5 +1,4 @@
 pub mod contact;
-pub mod details;
 pub mod discipline;
 pub mod format;
 pub mod location;

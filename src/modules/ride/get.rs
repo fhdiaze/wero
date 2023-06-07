@@ -1,5 +1,5 @@
 use crate::{
-  domain::{details::Details, location::Location, ride::Ride, route::Route},
+  domain::{location::Location, ride::Ride, route::Route},
   infra::{core::result::Result, db::traits::DynDbClient, error::AppError},
 };
 use bson::{doc, oid::ObjectId};
@@ -28,7 +28,7 @@ pub async fn handle(db: DynDbClient, query: Query) -> Result<RideVm> {
 pub struct RideVm {
   id: String,
   name: String,
-  details: DetailsVm,
+  route: RouteVm,
 }
 
 impl RideVm {
@@ -36,7 +36,7 @@ impl RideVm {
     RideVm {
       id: ride.id.unwrap().to_string(),
       name: ride.name.clone(),
-      details: DetailsVm::from(&ride.details),
+      route: RouteVm::from(&ride.route),
     }
   }
 }
@@ -61,29 +61,12 @@ impl LocationVm {
 }
 
 #[derive(Serialize)]
-pub struct DetailsVm {
-  route: RouteVm,
-  discipline: String,
-  format: String,
-}
-
-impl DetailsVm {
-  fn from(details: &Details) -> Self {
-    DetailsVm {
-      route: RouteVm::from(&details.route),
-      discipline: details.discipline.to_string(),
-      format: details.format.to_string(),
-    }
-  }
-}
-
-#[derive(Serialize)]
 pub struct RouteVm {
   pub distance: f64,
   pub elevation: i32,
   pub profile: String,
   pub description: String,
-  pub start: LocationVm,
+  pub depart_at: LocationVm,
 }
 
 impl RouteVm {
@@ -93,7 +76,7 @@ impl RouteVm {
       elevation: route.elevation,
       profile: route.profile.to_string(),
       description: route.description.clone(),
-      start: LocationVm::from(&route.start),
+      depart_at: LocationVm::from(&route.depart_at),
     }
   }
 }

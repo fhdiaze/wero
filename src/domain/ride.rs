@@ -1,7 +1,8 @@
-use super::{contact::Contact, details::Details};
+use super::{
+  contact::Contact, discipline::Discipline, format::Format, route::Route,
+};
 use crate::infra::{core::result::Result, error::AppError};
 use bson::oid::ObjectId;
-use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -10,8 +11,9 @@ pub struct Ride {
   pub id: Option<ObjectId>,
   pub name: String,
   pub description: String,
-  pub start_at: DateTime<Utc>,
-  pub details: Details,
+  pub route: Route,
+  pub discipline: Discipline,
+  pub format: Format,
   pub contact: Contact,
 }
 
@@ -21,8 +23,9 @@ impl Ride {
     id: Option<ObjectId>,
     name: String,
     description: String,
-    start_at: DateTime<Utc>,
-    details: Details,
+    route: Route,
+    discipline: Discipline,
+    format: Format,
     contact: Contact,
   ) -> Result<Self> {
     if name.is_empty() {
@@ -35,8 +38,9 @@ impl Ride {
       id,
       name,
       description,
-      start_at,
-      details,
+      route,
+      discipline,
+      format,
       contact,
     })
   }

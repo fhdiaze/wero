@@ -1,5 +1,4 @@
 use crate::domain::contact::Contact;
-use crate::domain::details::Details;
 use crate::domain::location::Location;
 use crate::domain::ride::Ride;
 use crate::domain::route::Route;
@@ -9,7 +8,7 @@ use crate::infra::{
   db::traits::DynDbClient,
 };
 use bson::Document;
-use chrono::{DateTime, Utc};
+use chrono::Utc;
 use futures::stream::TryStreamExt;
 use mongodb::bson::doc;
 use mongodb::options::FindOptions;
@@ -96,8 +95,8 @@ fn build_filter(cursor: Cursor<Query>) -> Document {
 #[derive(Serialize)]
 pub struct ContactVm {
   pub website: String,
-  pub email: String,
-  pub phone: String,
+  pub email: Option<String>,
+  pub phone: Option<String>,
 }
 
 impl ContactVm {
@@ -135,7 +134,7 @@ pub struct RouteVm {
   elevation: i32,
   profile: String,
   description: String,
-  start: LocationVm,
+  depart_at: LocationVm,
 }
 
 impl RouteVm {
@@ -145,24 +144,7 @@ impl RouteVm {
       elevation: route.elevation,
       profile: route.profile.to_string(),
       description: route.description.clone(),
-      start: LocationVm::from(&route.start),
-    }
-  }
-}
-
-#[derive(Serialize)]
-pub struct DetailsVm {
-  route: RouteVm,
-  discipline: String,
-  format: String,
-}
-
-impl DetailsVm {
-  fn from(details: &Details) -> Self {
-    DetailsVm {
-      route: RouteVm::from(&details.route),
-      discipline: details.discipline.to_string(),
-      format: details.format.to_string(),
+      depart_at: LocationVm::from(&route.depart_at),
     }
   }
 }
@@ -173,8 +155,9 @@ pub struct RideVm {
   id: String,
   name: String,
   description: String,
-  start_at: DateTime<Utc>,
-  details: DetailsVm,
+  route: RouteVm,
+  discipline: String,
+  format: String,
   contact: ContactVm,
 }
 
@@ -184,8 +167,9 @@ impl RideVm {
       id: ride.id.unwrap().to_string(),
       name: ride.name.clone(),
       description: ride.description.clone(),
-      start_at: ride.start_at,
-      details: DetailsVm::from(&ride.details),
+      route: RouteVm::from(&ride.route),
+      discipline: ride.discipline.to_string(),
+      format: ride.format.to_string(),
       contact: ContactVm::from(&ride.contact),
     }
   }
