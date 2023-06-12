@@ -21,6 +21,7 @@ pub struct Ride {
 
 impl Ride {
   /// Creates a ride
+  #[allow(clippy::too_many_arguments)]
   pub fn new(
     id: Option<ObjectId>,
     name: String,
