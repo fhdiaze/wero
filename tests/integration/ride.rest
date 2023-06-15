@@ -1,6 +1,6 @@
 @weroApi = {{protocol}}://{{hostname}}:{{port}}/api
 
-@rideId = 6415900fe6b67acb8f756d15
+@rideId = 648aa6dca6956f64bcfb796f
 GET {{weroApi}}/ride.get?id={{rideId}}
 
 ###
@@ -88,15 +88,17 @@ Content-Type: application/json
         "distance": 322,
         "elevation": 1650,
         "profile": "Rolling",
-        "description": "The Enduro event complete two full laps of the lake which is approximately 322km using the Poihipi/Marotiri loop. Last year the winning male time was 9 hours 33 minutes. The winning female time was 10 hours 11 minutes."
+        "description": "The Enduro event complete two full laps of the lake which is approximately 322km using the Poihipi/Marotiri loop. Last year the winning male time was 9 hours 33 minutes. The winning female time was 10 hours 11 minutes.",
+        "depart_at": {
+          "address": "Redoubt Street, Taupō 3330",
+          "city": "Taupo",
+          "region": "Waikato",
+          "country": "New Zealand"
+        }
     },
     "discipline": "Road",
     "format": "Race",
-    "location": {
-        "address": "Redoubt Street, Taupō 3330",
-        "city": "Taupo",
-        "region": "Waikato",
-        "country": "New Zealand"
-    },
-    "website": "https://www.cyclechallenge.com/enduro"
+    "contact": {
+      "website": "https://www.cyclechallenge.com/enduro"
+    }
 }
