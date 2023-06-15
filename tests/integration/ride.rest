@@ -1,6 +1,6 @@
 @weroApi = {{protocol}}://{{hostname}}:{{port}}/api
 
-@rideId = 648aa6dca6956f64bcfb796f
+@rideId = 6415900fe6b67acb8f756d15
 GET {{weroApi}}/ride.get?id={{rideId}}
 
 ###

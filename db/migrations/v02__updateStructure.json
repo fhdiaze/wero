@@ -7,17 +7,17 @@
         "u": [
           {
             "$set": {
-              "status": "Modified",
-              "comments": [
-                "$misc1",
-                "$misc2"
-              ]
+              "route.depart_at.address": "$location.address",
+              "route.depart_at.city": "$location.city",
+              "route.depart_at.region": "$location.region",
+              "route.depart_at.country": "$location.country",
+              "contact.website": "$website"
             }
           },
           {
             "$unset": [
-              "misc1",
-              "misc2"
+              "location",
+              "website"
             ]
           }
         ],
