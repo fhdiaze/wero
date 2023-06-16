@@ -1,6 +1,7 @@
 use super::{
-  format::Format, discipline::Discipline, location::Location, route::Route,
+  contact::Contact, discipline::Discipline, format::Format, route::Route,
 };
+use crate::infra::{core::result::Result, error::AppError};
 use bson::oid::ObjectId;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
@@ -15,12 +16,12 @@ pub struct Ride {
   pub route: Route,
   pub discipline: Discipline,
   pub format: Format,
-  pub location: Location,
-  pub website: String,
+  pub contact: Contact,
 }
 
 impl Ride {
   /// Creates a ride
+  #[allow(clippy::too_many_arguments)]
   pub fn new(
     id: Option<ObjectId>,
     name: String,
@@ -29,10 +30,15 @@ impl Ride {
     route: Route,
     discipline: Discipline,
     format: Format,
-    location: Location,
-    website: String,
-  ) -> Self {
-    Ride {
+    contact: Contact,
+  ) -> Result<Self> {
+    if name.is_empty() {
+      return Err(AppError::Validation(String::from(
+        "The name of a ride could not be empty",
+      )));
+    }
+
+    Ok(Self {
       id,
       name,
       description,
@@ -40,8 +46,7 @@ impl Ride {
       route,
       discipline,
       format,
-      location,
-      website,
-    }
+      contact,
+    })
   }
 }

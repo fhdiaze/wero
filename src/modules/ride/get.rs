@@ -29,7 +29,16 @@ pub struct RideVm {
   id: String,
   name: String,
   route: RouteVm,
-  location: LocationVm,
+}
+
+impl RideVm {
+  fn from(ride: &Ride) -> Self {
+    RideVm {
+      id: ride.id.unwrap().to_string(),
+      name: ride.name.clone(),
+      route: RouteVm::from(&ride.route),
+    }
+  }
 }
 
 #[derive(Serialize)]
@@ -57,6 +66,7 @@ pub struct RouteVm {
   pub elevation: i32,
   pub profile: String,
   pub description: String,
+  pub depart_at: LocationVm,
 }
 
 impl RouteVm {
@@ -64,19 +74,9 @@ impl RouteVm {
     RouteVm {
       distance: route.distance,
       elevation: route.elevation,
-      profile: route.profile.clone(),
+      profile: route.profile.to_string(),
       description: route.description.clone(),
-    }
-  }
-}
-
-impl RideVm {
-  fn from(ride: &Ride) -> Self {
-    RideVm {
-      id: ride.id.unwrap().to_string(),
-      name: ride.name.clone(),
-      route: RouteVm::from(&ride.route),
-      location: LocationVm::from(&ride.location),
+      depart_at: LocationVm::from(&route.depart_at),
     }
   }
 }

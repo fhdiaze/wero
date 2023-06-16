@@ -1,0 +1,10 @@
+env_files = [
+  ".env",
+]
+
+[tasks.watch]
+command = "cargo"
+args = ["watch", "-x", "run"]
+
+[tasks.default]
+alias = "watch"

@@ -81,22 +81,24 @@ POST {{weroApi}}/ride.create
 Content-Type: application/json
 
 {
-    "name": "CMC Gallipoli Cup - Handicap Race - Karaka",
-    "description": "This is a handicap race. Handicaps will be determined by the CMC committee with the aim of having a close finish between all starting groups",
-    "startAt": "2023-07-28 21:00:00Z",
+    "name": "Enduro - Lake Taupo - Cycle Challenge",
+    "description": "Enduro by name, enduro by nature. The Enduro uses the same course as the cornerstone event of the Lake Taupo Cycle Challenge, Round the Lake, TWICE!",
+    "startAt": "2023-11-24 13:30:00Z",
     "route": {
-        "distance": 80,
-        "elevation": 630,
+        "distance": 322,
+        "elevation": 1650,
         "profile": "Rolling",
-        "description": "16km laps starting & finishing at Karaka Hall"
+        "description": "The Enduro event complete two full laps of the lake which is approximately 322km using the Poihipi/Marotiri loop. Last year the winning male time was 9 hours 33 minutes. The winning female time was 10 hours 11 minutes.",
+        "depart_at": {
+          "address": "Redoubt Street, Taupō 3330",
+          "city": "Taupo",
+          "region": "Waikato",
+          "country": "New Zealand"
+        }
     },
     "discipline": "Road",
     "format": "Race",
-    "location": {
-        "address": "319 Linwood Road, Karaka 2580",
-        "city": "Karaka",
-        "region": "Auckland",
-        "country": "New Zealand"
-    },
-    "website": "https://www.webscorer.com/register?raceid=310085"
+    "contact": {
+      "website": "https://www.cyclechallenge.com/enduro"
+    }
 }

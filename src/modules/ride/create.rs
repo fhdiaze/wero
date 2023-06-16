@@ -1,6 +1,6 @@
 use crate::{
   domain::{
-    format::Format, discipline::Discipline, location::Location, ride::Ride,
+    contact::Contact, discipline::Discipline, format::Format, ride::Ride,
     route::Route,
   },
   infra::{core::result::Result, db::traits::DynDbClient},
@@ -13,12 +13,11 @@ use serde::{Deserialize, Serialize};
 pub struct Command {
   pub name: String,
   pub description: String,
-  pub route: Route,
   pub start_at: DateTime<Utc>,
+  pub route: Route,
   pub discipline: Discipline,
   pub format: Format,
-  pub location: Location,
-  pub website: String,
+  pub contact: Contact,
 }
 
 pub async fn handle(db: DynDbClient, cmd: Command) -> Result<RideVm> {
@@ -30,9 +29,8 @@ pub async fn handle(db: DynDbClient, cmd: Command) -> Result<RideVm> {
     cmd.route,
     cmd.discipline,
     cmd.format,
-    cmd.location,
-    cmd.website,
-  );
+    cmd.contact,
+  )?;
   let result = db.rides().insert_one(ride, None).await?;
   let ride_id = result.inserted_id.to_string();
 

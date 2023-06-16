@@ -1,0 +1,33 @@
+[
+  {
+    "update": "rides",
+    "updates": [
+      {
+        "q": {},
+        "u": [
+          {
+            "$set": {
+              "route.depart_at.address": "$location.address",
+              "route.depart_at.city": "$location.city",
+              "route.depart_at.region": "$location.region",
+              "route.depart_at.country": "$location.country",
+              "contact.website": "$website"
+            }
+          },
+          {
+            "$unset": [
+              "location",
+              "website"
+            ]
+          }
+        ],
+        "multi": true
+      }
+    ],
+    "ordered": false,
+    "writeConcern": {
+      "w": "majority",
+      "wtimeout": 5000
+    }
+  }
+]
