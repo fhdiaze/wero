@@ -3,11 +3,7 @@ use crate::{
     contact::Contact, discipline::Discipline, format::Format, ride::Ride,
     route::Route,
   },
-  infra::{
-    core::result::AppResult,
-    db::traits::DynDbClient,
-    fun::map::{create_mapper, create_mapper_res},
-  },
+  infra::{core::result::AppResult, db::traits::DynDbClient},
 };
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
