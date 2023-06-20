@@ -4,7 +4,7 @@ use crate::domain::ride::Ride;
 use crate::domain::route::Route;
 use crate::infra::core::paging::Cursor;
 use crate::infra::{
-  core::{paging::Page, result::Result},
+  core::{paging::Page, result::AppResult},
   db::traits::DynDbClient,
 };
 use bson::Document;
@@ -25,7 +25,7 @@ pub struct Query {
 pub async fn handle(
   db: DynDbClient,
   cursor: Cursor<Query>,
-) -> Result<Page<RideVm>> {
+) -> AppResult<Page<RideVm>> {
   let page = cursor.page;
   let rides = find_rides(db, cursor).await?;
   let rides_vm: Vec<RideVm> =
@@ -38,7 +38,7 @@ pub async fn handle(
 async fn find_rides(
   db: DynDbClient,
   cursor: Cursor<Query>,
-) -> Result<Vec<Ride>> {
+) -> AppResult<Vec<Ride>> {
   let offset = cursor.page * cursor.size;
   let options = FindOptions::builder()
     .sort(doc! { "start_at": 1, "_id": 1 })

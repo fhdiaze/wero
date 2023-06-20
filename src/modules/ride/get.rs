@@ -1,6 +1,6 @@
 use crate::{
   domain::{location::Location, ride::Ride, route::Route},
-  infra::{core::result::Result, db::traits::DynDbClient, error::AppError},
+  infra::{core::result::AppResult, db::traits::DynDbClient, error::AppError},
 };
 use bson::{doc, oid::ObjectId};
 use serde::{Deserialize, Serialize};
@@ -11,7 +11,7 @@ pub struct Query {
   id: ObjectId,
 }
 
-pub async fn handle(db: DynDbClient, query: Query) -> Result<RideVm> {
+pub async fn handle(db: DynDbClient, query: Query) -> AppResult<RideVm> {
   let filter = doc! {"_id": query.id };
   let opt_ride = db.rides().find_one(Some(filter), None).await?;
 

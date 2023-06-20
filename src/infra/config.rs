@@ -1,4 +1,4 @@
-use crate::infra::core::result::Result;
+use crate::infra::core::result::AppResult;
 use config as conf;
 use serde::Deserialize;
 
@@ -35,7 +35,7 @@ pub struct Config {
 }
 
 impl Config {
-  pub fn new() -> Result<Self> {
+  pub fn new() -> AppResult<Self> {
     let builder = conf::Config::builder()
       .add_source(conf::File::with_name("./config/default.toml"))
       .add_source(

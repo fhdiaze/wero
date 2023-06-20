@@ -1,7 +1,7 @@
 use super::{
   contact::Contact, discipline::Discipline, format::Format, route::Route,
 };
-use crate::infra::{core::result::Result, error::AppError};
+use crate::infra::{core::result::AppResult, error::AppError};
 use bson::oid::ObjectId;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
@@ -31,7 +31,7 @@ impl Ride {
     discipline: Discipline,
     format: Format,
     contact: Contact,
-  ) -> Result<Self> {
+  ) -> AppResult<Self> {
     if name.is_empty() {
       return Err(AppError::Validation(String::from(
         "The name of a ride could not be empty",
