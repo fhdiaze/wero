@@ -1,6 +1,7 @@
 {
     "cSpell.words": [
         "actix",
+        "axum",
         "bson",
         "chrono",
         "clippy",

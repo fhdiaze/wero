@@ -45,8 +45,7 @@ async fn find_rides(
     .skip(offset as u64)
     .limit(cursor.size as i64)
     .build();
-
-  let filter = build_filter(cursor);
+  let filter = cursor.query.map(build_filter);
 
   let rides: Vec<Ride> = db
     .rides()
@@ -58,38 +57,40 @@ async fn find_rides(
   Ok(rides)
 }
 
-fn build_filter(cursor: Cursor<Query>) -> Document {
+fn build_filter(query: Query) -> Document {
   let mut filter = doc! {};
 
   // Get just future rides
   filter.insert("start_at", doc! {"$gt": Utc::now().to_string()});
 
-  if let Some(query) = cursor.query {
-    let mut conditions: Vec<Document> = vec![];
+  let cs = build_conditions(query);
 
-    if let Some(name) = query.name.filter(|x| !x.is_empty()) {
-      conditions.push(doc! {"name": {"$regex": name, "$options": "i"}});
-    }
-
-    if let Some(city) = query.city.filter(|x| !x.is_empty()) {
-      conditions
-        .push(doc! { "location.city": {"$regex": city, "$options": "i"} });
-    }
-
-    if let Some(country) = query.country.filter(|x| !x.is_empty()) {
-      conditions.push(
-        doc! { "location.country": {"$regex": country, "$options": "i"} },
-      );
-    }
-
-    if !conditions.is_empty() {
-      filter.insert("$or", conditions);
-    }
+  if !cs.is_empty() {
+    filter.insert("$or", cs);
   }
 
   tracing::info!("Query sent={}", filter);
 
   filter
+}
+
+fn build_conditions(query: Query) -> Vec<Document> {
+  let values = [
+    ("name", query.name),
+    ("city", query.city),
+    ("country", query.country),
+  ];
+  let conditions: Vec<Document> = values
+    .into_iter()
+    .filter(|x| x.1.is_some())
+    .map(|v| regex(String::from(v.0), v.1.unwrap()))
+    .collect();
+
+  conditions
+}
+
+fn regex(field: String, pattern: String) -> Document {
+  doc! {field: {"$regex": pattern, "$options": "i"}}
 }
 
 #[derive(Serialize)]

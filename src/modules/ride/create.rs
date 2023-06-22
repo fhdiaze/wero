@@ -21,7 +21,7 @@ pub struct Command {
 }
 
 pub async fn handle(db: DynDbClient, cmd: Command) -> AppResult<RideVm> {
-  let ride = from_cmd(cmd)?;
+  let ride = cmd.to_ride()?;
   let result = db.rides().insert_one(ride, None).await?;
   let ride_id = result.inserted_id.to_string();
 
@@ -39,15 +39,17 @@ impl RideVm {
   }
 }
 
-fn from_cmd(cmd: Command) -> AppResult<Ride> {
-  Ride::new(
-    None,
-    cmd.name,
-    cmd.description,
-    cmd.start_at,
-    cmd.route,
-    cmd.discipline,
-    cmd.format,
-    cmd.contact,
-  )
+impl Command {
+  fn to_ride(&self) -> AppResult<Ride> {
+    Ride::new(
+      None,
+      self.name.clone(),
+      self.description.clone(),
+      self.start_at,
+      self.route.clone(),
+      self.discipline.clone(),
+      self.format.clone(),
+      self.contact.clone(),
+    )
+  }
 }
