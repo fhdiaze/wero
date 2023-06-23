@@ -45,7 +45,7 @@ async fn find_rides(
     .skip(offset as u64)
     .limit(cursor.size as i64)
     .build();
-  let filter = cursor.query.map(build_filter);
+  let filter = cursor.query.map(to_filter);
 
   let rides: Vec<Ride> = db
     .rides()
@@ -57,24 +57,20 @@ async fn find_rides(
   Ok(rides)
 }
 
-fn build_filter(query: Query) -> Document {
+fn to_filter(query: Query) -> Document {
   let mut filter = doc! {};
 
   // Get just future rides
   filter.insert("start_at", doc! {"$gt": Utc::now().to_string()});
 
-  let cs = build_conditions(query);
-
-  if !cs.is_empty() {
-    filter.insert("$or", cs);
-  }
+  to_conditions(query).map(|x| filter.insert("$or", x));
 
   tracing::info!("Query sent={}", filter);
 
   filter
 }
 
-fn build_conditions(query: Query) -> Vec<Document> {
+fn to_conditions(query: Query) -> Option<Vec<Document>> {
   let values = [
     ("name", query.name),
     ("city", query.city),
@@ -86,7 +82,11 @@ fn build_conditions(query: Query) -> Vec<Document> {
     .map(|v| regex(String::from(v.0), v.1.unwrap()))
     .collect();
 
-  conditions
+  if conditions.is_empty() {
+    return None;
+  }
+
+  Some(conditions)
 }
 
 fn regex(field: String, pattern: String) -> Document {

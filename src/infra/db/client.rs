@@ -1,4 +1,4 @@
-use mongodb::{self, Database};
+use mongodb::{self, options::ClientOptions, Database};
 
 use crate::{
   domain::ride::Ride,
@@ -14,8 +14,7 @@ pub struct Client {
 
 impl Client {
   pub async fn new(config: &Db) -> AppResult<Self> {
-    let options =
-      mongodb::options::ClientOptions::parse(&config.connection_string).await?;
+    let options = ClientOptions::parse(&config.connection_string).await?;
     let client = mongodb::Client::with_options(options)?;
     let db = client.database(&config.db_name);
     let rides = db.collection::<Ride>(&config.rides_collection);
