@@ -30,21 +30,6 @@ where
   Box::new(fm)
 }
 
-/// Tee a function that mutate the input
-pub fn teem<F, T, E>(f: &F) -> Box<Frt<'_, T, E>>
-where
-  F: Fn(&mut T),
-{
-  let fm = move |x: Result<T, E>| {
-    x.map(|mut t| {
-      f(&mut t);
-      t
-    })
-  };
-
-  Box::new(fm)
-}
-
 pub fn mix<'a, Fs, Fe, T, U, E>(f: &'a Fs, c: &'a Fe) -> Box<Fr<'a, T, E, U>>
 where
   Fs: Fn(T) -> U,
