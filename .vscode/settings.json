@@ -8,6 +8,7 @@
         "COLOR",
         "deploydev",
         "devwero",
+        "nonstandard",
         "prodwero",
         "serde",
         "threadpool",
