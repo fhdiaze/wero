@@ -7,7 +7,7 @@ pub fn map<T, U>(f: &Fs<T, U>) -> Box<Fo<'_, T, U>> {
   Box::new(fm)
 }
 
-pub fn bind<F, T, U>(f: &F) -> Box<dyn Fn(Option<T>) -> Option<U> + '_>
+pub fn bind<F, T, U>(f: &F) -> Box<Fo<'_, T, U>>
 where
   F: Fn(T) -> Option<U>,
 {

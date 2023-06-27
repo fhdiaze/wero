@@ -3,6 +3,7 @@ type Frt<'a, T, E> = dyn Fn(Result<T, E>) -> Result<T, E> + 'a;
 type Fs<T, U> = dyn Fn(T) -> U;
 type Fot<T, U, E> = dyn Fn(T) -> Result<U, E>;
 
+/// Adapts a function to receive and return a Result
 pub fn map<T, E, U>(f: &Fs<T, U>) -> Box<Fr<'_, T, E, U>> {
   let fm = move |x: Result<T, E>| x.map(f);
 
