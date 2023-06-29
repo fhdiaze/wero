@@ -1,12 +1,14 @@
 {
     "cSpell.words": [
         "actix",
+        "axum",
         "bson",
         "chrono",
         "clippy",
         "COLOR",
         "deploydev",
         "devwero",
+        "nonstandard",
         "prodwero",
         "serde",
         "threadpool",
@@ -32,5 +34,8 @@
             "protocol": "https",
             "port": "443"
         }
-    }
+    },
+    "rust-analyzer.linkedProjects": [
+        ".\\Cargo.toml"
+    ]
 }

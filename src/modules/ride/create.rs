@@ -3,7 +3,7 @@ use crate::{
     contact::Contact, discipline::Discipline, format::Format, ride::Ride,
     route::Route,
   },
-  infra::{core::result::Result, db::traits::DynDbClient},
+  infra::{core::result::AppResult, db::traits::DynDbClient},
 };
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
@@ -20,17 +20,8 @@ pub struct Command {
   pub contact: Contact,
 }
 
-pub async fn handle(db: DynDbClient, cmd: Command) -> Result<RideVm> {
-  let ride = Ride::new(
-    None,
-    cmd.name,
-    cmd.description,
-    cmd.start_at,
-    cmd.route,
-    cmd.discipline,
-    cmd.format,
-    cmd.contact,
-  )?;
+pub async fn handle(db: DynDbClient, cmd: Command) -> AppResult<RideVm> {
+  let ride = cmd.to_ride()?;
   let result = db.rides().insert_one(ride, None).await?;
   let ride_id = result.inserted_id.to_string();
 
@@ -45,5 +36,20 @@ pub struct RideVm {
 impl RideVm {
   fn new(id: String) -> Self {
     RideVm { id }
+  }
+}
+
+impl Command {
+  fn to_ride(&self) -> AppResult<Ride> {
+    Ride::new(
+      None,
+      self.name.clone(),
+      self.description.clone(),
+      self.start_at,
+      self.route.clone(),
+      self.discipline.clone(),
+      self.format.clone(),
+      self.contact.clone(),
+    )
   }
 }

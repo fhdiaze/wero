@@ -4,49 +4,33 @@ use crate::domain::ride::Ride;
 use crate::domain::route::Route;
 use crate::infra::core::paging::Cursor;
 use crate::infra::{
-  core::{paging::Page, result::Result},
+  core::{paging::Page, result::AppResult},
   db::traits::DynDbClient,
 };
 use bson::Document;
 use chrono::Utc;
-use futures::stream::TryStreamExt;
+use futures::TryStreamExt;
 use mongodb::bson::doc;
 use mongodb::options::FindOptions;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize)]
-pub struct Query {
-  pub name: Option<String>,
-  pub description: Option<String>,
-  pub city: Option<String>,
-  pub country: Option<String>,
-}
-
+/// Handles a rides query
 pub async fn handle(
   db: DynDbClient,
   cursor: Cursor<Query>,
-) -> Result<Page<RideVm>> {
-  let page = cursor.page;
-  let rides = find_rides(db, cursor).await?;
-  let rides_vm: Vec<RideVm> =
-    rides.into_iter().map(|r| RideVm::from(&r)).collect();
-  let size = rides_vm.len();
+) -> AppResult<Page<RideVm>> {
+  let page = cursor.page_number;
+  let rides_vm = find_rides(db, cursor).await.map(RideVm::from_many)?;
 
-  Ok(Page::new(rides_vm, page, size))
+  Ok(Page::new(rides_vm, page))
 }
 
 async fn find_rides(
   db: DynDbClient,
   cursor: Cursor<Query>,
-) -> Result<Vec<Ride>> {
-  let offset = cursor.page * cursor.size;
-  let options = FindOptions::builder()
-    .sort(doc! { "start_at": 1, "_id": 1 })
-    .skip(offset as u64)
-    .limit(cursor.size as i64)
-    .build();
-
-  let filter = build_filter(cursor);
+) -> AppResult<Vec<Ride>> {
+  let options = build_options(cursor.page_number, cursor.page_size);
+  let filter = cursor.query.map(to_filter);
 
   let rides: Vec<Ride> = db
     .rides()
@@ -58,38 +42,57 @@ async fn find_rides(
   Ok(rides)
 }
 
-fn build_filter(cursor: Cursor<Query>) -> Document {
+fn build_options(page_number: usize, page_size: usize) -> FindOptions {
+  let offset = page_number * page_size;
+  FindOptions::builder()
+    .sort(doc! { "start_at": 1, "_id": 1 })
+    .skip(offset as u64)
+    .limit(page_size as i64)
+    .build()
+}
+
+fn to_filter(query: Query) -> Document {
   let mut filter = doc! {};
 
   // Get just future rides
   filter.insert("start_at", doc! {"$gt": Utc::now().to_string()});
 
-  if let Some(query) = cursor.query {
-    let mut conditions: Vec<Document> = vec![];
-
-    if let Some(name) = query.name.filter(|x| !x.is_empty()) {
-      conditions.push(doc! {"name": {"$regex": name, "$options": "i"}});
-    }
-
-    if let Some(city) = query.city.filter(|x| !x.is_empty()) {
-      conditions
-        .push(doc! { "location.city": {"$regex": city, "$options": "i"} });
-    }
-
-    if let Some(country) = query.country.filter(|x| !x.is_empty()) {
-      conditions.push(
-        doc! { "location.country": {"$regex": country, "$options": "i"} },
-      );
-    }
-
-    if !conditions.is_empty() {
-      filter.insert("$or", conditions);
-    }
-  }
+  to_conditions(query).map(|x| filter.insert("$or", x));
 
   tracing::info!("Query sent={}", filter);
 
   filter
+}
+
+fn to_conditions(query: Query) -> Option<Vec<Document>> {
+  let values = [
+    ("name", query.name),
+    ("city", query.city),
+    ("country", query.country),
+  ];
+  let conditions: Vec<Document> = values
+    .into_iter()
+    .filter(|x| x.1.is_some())
+    .map(|v| regex(String::from(v.0), v.1.unwrap()))
+    .collect();
+
+  if conditions.is_empty() {
+    return None;
+  }
+
+  Some(conditions)
+}
+
+fn regex(field: String, pattern: String) -> Document {
+  doc! {field: {"$regex": pattern, "$options": "i"}}
+}
+
+#[derive(Deserialize)]
+pub struct Query {
+  pub name: Option<String>,
+  pub description: Option<String>,
+  pub city: Option<String>,
+  pub country: Option<String>,
 }
 
 #[derive(Serialize)]
@@ -162,15 +165,18 @@ pub struct RideVm {
 }
 
 impl RideVm {
-  fn from(ride: &Ride) -> Self {
+  fn from(ride: Ride) -> Self {
     RideVm {
       id: ride.id.unwrap().to_string(),
-      name: ride.name.clone(),
-      description: ride.description.clone(),
+      name: ride.name,
+      description: ride.description,
       route: RouteVm::from(&ride.route),
       discipline: ride.discipline.to_string(),
       format: ride.format.to_string(),
       contact: ContactVm::from(&ride.contact),
     }
+  }
+  fn from_many(rides: Vec<Ride>) -> Vec<Self> {
+    rides.into_iter().map(Self::from).collect()
   }
 }

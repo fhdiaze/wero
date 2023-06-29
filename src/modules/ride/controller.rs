@@ -2,7 +2,7 @@ use super::{create, find, get};
 use crate::infra::{
   core::{
     paging::{Cursor, Page},
-    result::Result,
+    result::AppResult,
   },
   db::traits::DynDbClient,
 };
@@ -15,7 +15,7 @@ use axum::{
 async fn handle_create(
   State(db): State<DynDbClient>,
   Json(cmd): Json<create::Command>,
-) -> Result<create::RideVm> {
+) -> AppResult<create::RideVm> {
   let ride = create::handle(db, cmd).await?;
 
   Ok(ride)
@@ -24,7 +24,7 @@ async fn handle_create(
 async fn handle_get(
   State(db): State<DynDbClient>,
   Query(query): Query<get::Query>,
-) -> Result<get::RideVm> {
+) -> AppResult<get::RideVm> {
   let ride = get::handle(db, query).await?;
 
   Ok(ride)
@@ -33,7 +33,7 @@ async fn handle_get(
 async fn handle_find(
   State(db): State<DynDbClient>,
   Json(cursor): Json<Cursor<find::Query>>,
-) -> Result<Page<find::RideVm>> {
+) -> AppResult<Page<find::RideVm>> {
   let rides = find::handle(db, cursor).await?;
 
   Ok(rides)
