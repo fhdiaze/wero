@@ -10,7 +10,7 @@ pub struct Page<T> {
   /// The items of the page
   pub items: Vec<T>,
   /// The page number: 0, 1, ...
-  pub page: usize,
+  pub number: usize,
   /// The size of the page
   pub size: usize,
 }
@@ -21,10 +21,14 @@ impl<T> Page<T> {
   /// # Arguments
   ///
   /// * `items` - The items of the page
-  /// * `page` - The number of the page: 0, 1, ...
-  /// * `size` - The size of the page
-  pub fn new(items: Vec<T>, page: usize, size: usize) -> Self {
-    Page { items, page, size }
+  /// * `number` - The number of the page: 0, 1, ...
+  pub fn new(items: Vec<T>, number: usize) -> Self {
+    let size = items.len();
+    Page {
+      items,
+      number,
+      size,
+    }
   }
 }
 
@@ -38,16 +42,16 @@ impl<T: Serialize> IntoResponse for Page<T> {
 #[serde(rename_all = "camelCase")]
 pub struct Cursor<Query> {
   pub query: Option<Query>,
-  #[serde(default = "default_page")]
-  pub page: usize,
-  #[serde(default = "default_size")]
-  pub size: usize,
+  #[serde(default = "default_page_number")]
+  pub page_number: usize,
+  #[serde(default = "default_page_size")]
+  pub page_size: usize,
 }
 
-fn default_page() -> usize {
+fn default_page_number() -> usize {
   0
 }
 
-fn default_size() -> usize {
+fn default_page_size() -> usize {
   10
 }
