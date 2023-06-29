@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 type Fo<'a, T, U> = dyn Fn(Option<T>) -> Option<U> + 'a;
 type Fs<T, U> = dyn Fn(T) -> U;
 

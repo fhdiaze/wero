@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 type Fr<'a, T, E, U> = dyn Fn(Result<T, E>) -> Result<U, E> + 'a;
 type Frt<'a, T, E> = dyn Fn(Result<T, E>) -> Result<T, E> + 'a;
 type Fs<T, U> = dyn Fn(T) -> U;
