@@ -1,73 +1,30 @@
 #![deny(nonstandard_style)]
-use crate::modules::ride;
-use axum::{
-  http::{header::CONTENT_TYPE, Method},
-  Router,
-};
-use infra::{
-  config::Config,
-  db::{client::Client, traits::DynDbClient},
-};
-use std::{net::SocketAddr, sync::Arc};
-use tower::ServiceBuilder;
-use tower_http::{
-  classify::{ServerErrorsAsFailures, SharedClassifier},
-  cors::{Any, CorsLayer},
-  trace::{DefaultOnRequest, DefaultOnResponse, TraceLayer},
-};
-use tracing::Level;
+use std::str::FromStr;
 
+use api::rest;
+use infra::config::Config;
+use tracing::Level;
+use tracing_subscriber::EnvFilter;
+
+mod api;
 mod domain;
 mod infra;
 mod modules;
 
 #[tokio::main]
 async fn main() {
-  let config = Config::new().expect("Error loading configuration");
+  let config = Config::new().expect("Failed to load configuration");
+  config_logger(&config);
+  rest::server::start(&config).await;
+}
 
+fn config_logger(config: &Config) {
+  println!("{}", config.log.level);
+  let filter_layer = EnvFilter::default()
+    .add_directive(Level::from_str(&config.log.level).unwrap().into());
   tracing_subscriber::fmt()
+    .with_env_filter(filter_layer)
     .with_target(false)
-    .compact()
+    .json()
     .init();
-
-  let db_client = db_client(&config).await;
-  let service_builder = ServiceBuilder::new()
-    .layer(trace_layer())
-    .layer(cors_layer());
-  let router = router().layer(service_builder).with_state(db_client);
-  let addr = SocketAddr::from(([0, 0, 0, 0], config.server.port));
-
-  tracing::info!("Server is listening on address={}", addr);
-
-  axum::Server::bind(&addr)
-    .serve(router.into_make_service())
-    .await
-    .unwrap();
-}
-
-fn router() -> Router<DynDbClient> {
-  let rides = ride::controller::route();
-
-  Router::new().nest("/api", rides)
-}
-
-fn trace_layer() -> TraceLayer<SharedClassifier<ServerErrorsAsFailures>> {
-  TraceLayer::new_for_http()
-    .on_request(DefaultOnRequest::new().level(Level::INFO))
-    .on_response(DefaultOnResponse::new().level(Level::INFO))
-}
-
-fn cors_layer() -> CorsLayer {
-  CorsLayer::new()
-    .allow_methods([Method::GET, Method::POST])
-    .allow_headers([CONTENT_TYPE])
-    .allow_origin(Any)
-}
-
-async fn db_client(config: &Config) -> DynDbClient {
-  let client = Client::new(&config.db)
-    .await
-    .expect("Error creating DB client");
-
-  Arc::new(client) as DynDbClient
 }

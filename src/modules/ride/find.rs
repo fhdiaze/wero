@@ -1,11 +1,12 @@
-use crate::domain::contact::Contact;
-use crate::domain::location::Location;
-use crate::domain::ride::Ride;
-use crate::domain::route::Route;
-use crate::infra::core::paging::Cursor;
-use crate::infra::{
-  core::{paging::Page, result::AppResult},
-  db::traits::DynDbClient,
+use crate::{
+  domain::{contact::Contact, location::Location, ride::Ride, route::Route},
+  infra::{
+    core::{
+      paging::{Cursor, Page},
+      result::AppResult,
+    },
+    db::traits::DynDbClient,
+  },
 };
 use bson::Document;
 use chrono::Utc;
@@ -13,6 +14,7 @@ use futures::TryStreamExt;
 use mongodb::bson::doc;
 use mongodb::options::FindOptions;
 use serde::{Deserialize, Serialize};
+use tracing::info;
 
 /// Handles a rides query
 pub async fn handle(
@@ -59,7 +61,7 @@ fn to_filter(query: Query) -> Document {
 
   to_conditions(query).map(|x| filter.insert("$or", x));
 
-  tracing::info!("Query sent={}", filter);
+  info!("Query sent={}", filter);
 
   filter
 }
@@ -73,7 +75,7 @@ fn to_conditions(query: Query) -> Option<Vec<Document>> {
   let conditions: Vec<Document> = values
     .into_iter()
     .filter(|x| x.1.is_some())
-    .map(|v| regex(String::from(v.0), v.1.unwrap()))
+    .map(|v| to_regex(String::from(v.0), v.1.unwrap()))
     .collect();
 
   if conditions.is_empty() {
@@ -83,11 +85,11 @@ fn to_conditions(query: Query) -> Option<Vec<Document>> {
   Some(conditions)
 }
 
-fn regex(field: String, pattern: String) -> Document {
+fn to_regex(field: String, pattern: String) -> Document {
   doc! {field: {"$regex": pattern, "$options": "i"}}
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct Query {
   pub name: Option<String>,
   pub description: Option<String>,
