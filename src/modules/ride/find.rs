@@ -14,7 +14,7 @@ use futures::TryStreamExt;
 use mongodb::bson::doc;
 use mongodb::options::FindOptions;
 use serde::{Deserialize, Serialize};
-use tracing::info;
+use tracing;
 
 /// Handles a rides query
 pub async fn handle(
@@ -61,7 +61,7 @@ fn to_filter(query: Query) -> Document {
 
   to_conditions(query).map(|x| filter.insert("$or", x));
 
-  info!("Query sent={}", filter);
+  tracing::info!("Query sent={}", filter);
 
   filter
 }

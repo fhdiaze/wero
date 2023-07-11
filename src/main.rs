@@ -25,6 +25,6 @@ fn add_logger(config: &Config) {
     .with_env_filter(filter_layer)
     .with_target(false)
     .with_file(true)
-    .json()
+    .compact()
     .init();
 }
