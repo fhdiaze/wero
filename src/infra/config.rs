@@ -1,5 +1,4 @@
 use crate::infra::core::result::AppResult;
-use conf::Value;
 use config as conf;
 use serde::Deserialize;
 

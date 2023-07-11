@@ -29,17 +29,16 @@ pub async fn start(config: &Config) {
   let router = build_router().layer(service_builder).with_state(db_client);
   let addr = SocketAddr::from(([0, 0, 0, 0], config.server.port));
 
+  info!("Server is listening on address={}", addr);
+
   axum::Server::bind(&addr)
     .serve(router.into_make_service())
     .await
-    .expect("Failed to load start the rest server");
-
-  info!("Server is listening on address={}", addr);
+    .expect("Failed to start the rest server");
 }
 
 pub fn trace_layer() -> TraceLayer<SharedClassifier<ServerErrorsAsFailures>> {
   TraceLayer::new_for_http()
-    .make_span_with(DefaultMakeSpan::new().level(Level::INFO))
     .on_request(DefaultOnRequest::new().level(Level::INFO))
     .on_response(DefaultOnResponse::new().level(Level::INFO))
 }
