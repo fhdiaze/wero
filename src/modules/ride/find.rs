@@ -5,7 +5,7 @@ use crate::{
       paging::{Cursor, Page},
       result::AppResult,
     },
-    db::traits::DynDbClient,
+    db::traits::DynDbClient, fun::option::map,
   },
 };
 use bson::Document;
@@ -32,7 +32,7 @@ async fn find_rides(
   cursor: Cursor<Query>,
 ) -> AppResult<Vec<Ride>> {
   let options = build_options(cursor.page_number, cursor.page_size);
-  let filter = cursor.query.map(to_filter);
+  let filter = map(&build_filter)(cursor.query);
 
   let rides: Vec<Ride> = db
     .rides()
@@ -53,7 +53,7 @@ fn build_options(page_number: usize, page_size: usize) -> FindOptions {
     .build()
 }
 
-fn to_filter(query: Query) -> Document {
+fn build_filter(query: Query) -> Document {
   let mut filter = doc! {};
 
   // Get just future rides
