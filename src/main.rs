@@ -24,7 +24,6 @@ fn add_logger(config: &Config) {
   tracing_subscriber::fmt()
     .with_env_filter(filter_layer)
     .with_target(false)
-    .with_file(true)
     .compact()
     .init();
 }

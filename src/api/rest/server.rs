@@ -10,7 +10,7 @@ use tower_http::{
   cors::{Any, CorsLayer},
   trace::{DefaultMakeSpan, DefaultOnRequest, DefaultOnResponse, TraceLayer},
 };
-use tracing::{info, Level};
+use tracing::Level;
 
 use crate::{
   infra::{
@@ -21,7 +21,7 @@ use crate::{
 };
 
 pub async fn start(config: &Config) {
-  info!("Starting the axum server");
+  tracing::info!("Starting the axum server");
   let db_client = db_client(config).await;
   let service_builder = ServiceBuilder::new()
     .layer(trace_layer())
@@ -29,7 +29,7 @@ pub async fn start(config: &Config) {
   let router = build_router().layer(service_builder).with_state(db_client);
   let addr = SocketAddr::from(([0, 0, 0, 0], config.server.port));
 
-  info!("Server is listening on address={}", addr);
+  tracing::info!("Server is listening on address={}", addr);
 
   axum::Server::bind(&addr)
     .serve(router.into_make_service())
@@ -39,6 +39,7 @@ pub async fn start(config: &Config) {
 
 pub fn trace_layer() -> TraceLayer<SharedClassifier<ServerErrorsAsFailures>> {
   TraceLayer::new_for_http()
+    .make_span_with(DefaultMakeSpan::new().level(Level::INFO))
     .on_request(DefaultOnRequest::new().level(Level::INFO))
     .on_response(DefaultOnResponse::new().level(Level::INFO))
 }
